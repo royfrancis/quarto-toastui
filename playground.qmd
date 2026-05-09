@@ -1,0 +1,504 @@
+---
+title: Playground
+format:
+  html:
+    page-layout: full
+    toc: false
+execute:
+  echo: false
+  warning: false
+  error: false
+resources: 
+  - data
+---
+
+<link rel="stylesheet" href="_extensions/toastui/assets/toastui-calendar.min.css">
+<link rel="stylesheet" href="_extensions/toastui/toastui.css">
+<script src="_extensions/toastui/assets/toastui-calendar.min.js"></script>
+
+<style>
+.playground-grid {
+  display: grid;
+  grid-template-columns: minmax(320px, 400px) 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+
+.playground-left,
+.playground-right {
+  background: linear-gradient(180deg, #f9f4eb 0%, #f5efe5 100%);
+  border: 1px solid #dfd2bd;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.playground-left {
+  position: sticky;
+  top: 0.75rem;
+  max-height: calc(100vh - 1.5rem);
+  overflow: auto;
+}
+
+.playground-left h3,
+.playground-right h3 {
+  margin-top: 0;
+}
+
+#calendar-frame {
+  border: 1px solid #d7c3a7;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  padding: 0.5rem;
+}
+
+.config-preview {
+  margin-top: 0.75rem;
+  border: 1px solid #d7c3a7;
+  border-radius: 8px;
+  background: #fffaf2;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  max-height: 220px;
+  overflow: auto;
+}
+
+.form-note {
+  font-size: 0.9rem;
+  color: #5d4631;
+  margin-bottom: 0.75rem;
+}
+
+.ctrl-group {
+  margin-bottom: 0.75rem;
+}
+
+.ctrl-group details {
+  border: 1px solid #d7c3a7;
+  border-radius: 8px;
+  background: #fffaf2;
+  padding: 0.5rem 0.65rem;
+}
+
+.ctrl-group summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .playground-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .playground-left {
+    position: static;
+    max-height: none;
+  }
+}
+
+/* Inherit Bootstrap styles for OJS form controls */
+.playground-left form {
+  font-family: inherit;
+}
+
+.playground-left input[type="text"],
+.playground-left input[type="number"],
+.playground-left input[type="range"],
+.playground-left select,
+.playground-left textarea {
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--bs-body-color);
+  background-color: var(--bs-body-bg);
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius);
+  padding: 0.375rem 0.75rem;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.playground-left input[type="text"]:focus,
+.playground-left input[type="number"]:focus,
+.playground-left select:focus,
+.playground-left textarea:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+}
+
+.playground-left label {
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--bs-body-color);
+}
+
+#week-options-container,
+#month-options-container,
+.week-options-container,
+.month-options-container {
+  display: none;
+}
+</style>
+
+::: {.playground-grid}
+::: {.playground-left}
+### Controls
+
+```{ojs}
+import {Inputs} from "npm:@observablehq/inputs"
+```
+
+```{ojs}
+viewof filePath = Inputs.select([
+  "data/events.tsv",
+  "data/events.csv",
+  "data/schedule.csv",
+  "data/workshop-week.tsv",
+  "data/bad-empty.tsv",
+  "data/bad-missing-start.csv",
+  "data/bad-missing-title.tsv",
+  "data/bad-multiple-row-errors.csv",
+  "data/bad-no-header.tsv"
+], {
+  label: "file",
+  value: "data/events.tsv"
+})
+
+viewof fileSepRaw = Inputs.select(["\\t", ",", ";"], {
+  label: "file-sep",
+  value: "\\t"
+})
+
+viewof initialDate = Inputs.text({
+  label: "date",
+  value: autoDate
+})
+
+viewof defaultView = Inputs.select(["month", "week", "day"], {
+  label: "defaultView",
+  value: "week"
+})
+
+viewof heightPx = Inputs.range([420, 980], {
+  label: "height",
+  value: 680,
+  step: 20,
+  format: (value) => `${value}px`
+})
+
+viewof isReadOnly = Inputs.toggle({
+  label: "isReadOnly",
+  value: true
+})
+
+viewof useDetailPopup = Inputs.toggle({
+  label: "useDetailPopup",
+  value: false
+})
+```
+
+::: {.week-options-container}
+
+---
+
+```{ojs}
+viewof weekStartDay = Inputs.range([0, 6], {
+  label: "week.startDayOfWeek",
+  value: 1,
+  step: 1
+})
+
+viewof weekDayNames = Inputs.text({
+  label: "week.dayNames (comma separated)",
+  value: "Mon,Tue,Wed,Thu,Fri,Sat,Sun"
+})
+
+viewof weekNarrowWeekend = Inputs.toggle({
+  label: "week.narrowWeekend",
+  value: false
+})
+
+viewof weekWorkweek = Inputs.toggle({
+  label: "week.workweek",
+  value: false
+})
+
+viewof weekShowNowIndicator = Inputs.toggle({
+  label: "week.showNowIndicator",
+  value: true
+})
+
+viewof weekHourStart = Inputs.range([0, 23], {
+  label: "week.hourStart",
+  value: 6,
+  step: 1
+})
+
+viewof weekHourEnd = Inputs.range([1, 24], {
+  label: "week.hourEnd",
+  value: 22,
+  step: 1
+})
+
+viewof weekEventView = Inputs.checkbox(["allday", "time"], {
+  label: "week.eventView",
+  value: ["allday", "time"]
+})
+
+viewof weekTaskView = Inputs.checkbox(["milestone", "task"], {
+  label: "week.taskView",
+  value: ["milestone", "task"]
+})
+```
+
+:::
+
+::: {.month-options-container}
+
+---
+
+```{ojs}
+viewof monthStartDay = Inputs.range([0, 6], {
+  label: "month.startDayOfWeek",
+  value: 1,
+  step: 1
+})
+
+viewof monthDayNames = Inputs.text({
+  label: "month.dayNames (comma separated)",
+  value: "Sun,Mon,Tue,Wed,Thu,Fri,Sat"
+})
+
+viewof monthNarrowWeekend = Inputs.toggle({
+  label: "month.narrowWeekend",
+  value: false
+})
+
+viewof monthWorkweek = Inputs.toggle({
+  label: "month.workweek",
+  value: false
+})
+
+viewof monthVisibleWeeksCount = Inputs.range([0, 6], {
+  label: "month.visibleWeeksCount (0=auto)",
+  value: 0,
+  step: 1
+})
+
+viewof monthAlways6Weeks = Inputs.toggle({
+  label: "month.isAlways6Weeks",
+  value: true
+})
+```
+
+:::
+
+```{ojs}
+viewToggle = {
+  const wk = document.querySelector(".week-options-container")
+  const mo = document.querySelector(".month-options-container")
+  if (wk) wk.style.display = (defaultView === "week") ? "block" : "none"
+  if (mo) mo.style.display = (defaultView === "month") ? "block" : "none"
+  return defaultView
+}
+```
+:::
+
+::: {.playground-right}
+### Calendar
+
+<div id="calendar-frame">
+<div id="calendar-mount" style="height: 680px;"></div>
+</div>
+
+<pre id="config-preview" class="config-preview"></pre>
+
+```{ojs}
+normalizeSep = (raw) => (raw == null ? "\\t" : raw).replace(/\\t/g, "\t").replace(/\\n/g, "\n").replace(/\\\\/g, "\\")
+```
+
+```{ojs}
+splitNames = (txt, fallback) => {
+  const values = (txt || "").split(",").map((s) => s.trim()).filter(Boolean)
+  return values.length ? values : fallback
+}
+```
+
+```{ojs}
+parseDelimited = (text, sep) => {
+  const lines = (text || "").split(/\r?\n/).filter((line) => line.trim() !== "")
+  if (lines.length < 2) return []
+  const headers = lines[0].split(sep)
+  return lines.slice(1).map((line) => {
+    const values = line.split(sep)
+    const row = {}
+    headers.forEach((h, j) => {
+      const key = (h || "").trim()
+      const raw = (values[j] || "").trim()
+      if (!key) return
+      if (raw === "true") row[key] = true
+      else if (raw === "false") row[key] = false
+      else row[key] = raw
+    })
+    return row
+  })
+}
+```
+
+```{ojs}
+loadFileEvents = async (path, sep) => {
+  try {
+    const response = await fetch(path)
+    if (!response.ok) return {events: [], error: "Could not load " + path + " (" + response.status + ")"}
+    const text = await response.text()
+    return {events: parseDelimited(text, sep), error: ""}
+  } catch (err) {
+    return {events: [], error: "Could not load " + path}
+  }
+}
+```
+
+```{ojs}
+defaultEvents = [
+  {id: "fallback-1", calendarId: "cal1", title: "Fallback Kickoff", category: "time", start: "2026-04-13T09:00:00", end: "2026-04-13T10:00:00", location: "Room North"},
+  {id: "fallback-2", calendarId: "cal1", title: "Fallback Workshop", category: "time", start: "2026-04-14T13:00:00", end: "2026-04-14T15:00:00", location: "Studio B"}
+]
+```
+
+```{ojs}
+autoDate = {
+  const starts = eventList
+    .map((e) => e.start || "")
+    .filter((s) => s.length >= 10)
+    .sort()
+  if (starts.length) return starts[0].slice(0, 10)
+  return "2026-04-13"
+}
+```
+
+```{ojs}
+sep = normalizeSep(fileSepRaw)
+```
+
+```{ojs}
+fileResult = await loadFileEvents(filePath, sep)
+```
+
+```{ojs}
+eventList = fileResult.events.length ? fileResult.events : defaultEvents
+```
+
+```{ojs}
+eventError = fileResult.error
+```
+
+```{ojs}
+calendarConfig = ({
+  defaultView: defaultView,
+  isReadOnly: isReadOnly,
+  usageStatistics: false,
+  gridSelection: true,
+  useDetailPopup: useDetailPopup,
+  week: {
+    startDayOfWeek: weekStartDay,
+    dayNames: splitNames(weekDayNames, ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]),
+    narrowWeekend: weekNarrowWeekend,
+    workweek: weekWorkweek,
+    showNowIndicator: weekShowNowIndicator,
+    hourStart: weekHourStart,
+    hourEnd: weekHourEnd,
+    eventView: weekEventView.length ? weekEventView : false,
+    taskView: weekTaskView.length ? weekTaskView : false
+  },
+  month: {
+    startDayOfWeek: monthStartDay,
+    dayNames: splitNames(monthDayNames, ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
+    narrowWeekend: monthNarrowWeekend,
+    workweek: monthWorkweek,
+    visibleWeeksCount: monthVisibleWeeksCount,
+    isAlways6Weeks: monthAlways6Weeks
+  },
+  timezone: {
+    zones: [{
+      timezoneName: "Europe/Stockholm",
+      timezoneOffset: 1,
+      displayLabel: "Stockholm"
+    }]
+  },
+  calendars: [{
+    id: "cal1",
+    name: "Main Calendar",
+    color: "#ffffff",
+    backgroundColor: "#2c9f8f",
+    dragBackgroundColor: "#2c9f8f",
+    borderColor: "#206d62"
+  }]
+})
+```
+
+```{ojs}
+calendar = {
+  const mount = document.querySelector("#calendar-mount")
+  const preview = document.querySelector("#config-preview")
+  const toYAML = (value, level = 0) => {
+    const indent = "  ".repeat(level)
+    if (value == null) return "null"
+    if (typeof value === "string") {
+      if (value === "") return "''"
+      return "'" + value.replace(/'/g, "''") + "'"
+    }
+    if (typeof value === "number" || typeof value === "boolean") return String(value)
+    if (Array.isArray(value)) {
+      if (!value.length) return "[]"
+      return value.map((item) => {
+        if (item && typeof item === "object") {
+          const block = toYAML(item, level + 1)
+          const lines = block.split("\n")
+          return indent + "- " + lines[0] + (lines.length > 1 ? "\n" + lines.slice(1).map((line) => indent + "  " + line).join("\n") : "")
+        }
+        return indent + "- " + toYAML(item, level + 1)
+      }).join("\n")
+    }
+    const entries = Object.entries(value).filter(([, v]) => v !== undefined)
+    if (!entries.length) return "{}"
+    return entries.map(([key, val]) => {
+      if (val && typeof val === "object") {
+        return indent + key + ":\n" + toYAML(val, level + 1)
+      }
+      return indent + key + ": " + toYAML(val, level + 1)
+    }).join("\n")
+  }
+  const payload = {
+    toastui: {
+      calendar: calendarConfig,
+      extension: {
+        height: heightPx + "px",
+        file: filePath,
+        "file-sep": fileSepRaw,
+        date: initialDate
+      },
+      runtime: {
+        eventsLoaded: eventList.length,
+        eventError: eventError || null
+      }
+    }
+  }
+  if (preview) preview.textContent = toYAML(payload)
+  if (!window.tui || !window.tui.Calendar) return null
+  if (!mount) return null
+  mount.style.height = heightPx + "px"
+  if (window.__playgroundCal && typeof window.__playgroundCal.destroy === "function") {
+    window.__playgroundCal.destroy()
+  }
+  mount.innerHTML = ""
+  const cal = new window.tui.Calendar(mount, calendarConfig)
+  window.__playgroundCal = cal
+  if (eventList.length) cal.createEvents(eventList)
+  if (initialDate) cal.setDate(new Date(initialDate))
+  invalidation.then(() => { cal.destroy(); window.__playgroundCal = null })
+  return cal
+}
+```
+
+
+:::
+:::

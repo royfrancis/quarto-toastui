@@ -1,0 +1,90 @@
+---
+title: Inline Parameter Tests
+format: html
+---
+
+Each section tests a single inline shortcode parameter in isolation. No YAML calendar configuration is used.
+
+## `file` (TSV)
+
+Tests loading events from a TSV file.
+
+{{< toastui file="data/events.tsv" file-sep="\t" >}}
+
+## `file` (CSV)
+
+Tests loading events from a CSV file.
+
+{{< toastui file="data/events.csv" file-sep="," >}}
+
+## `file-sep` (tab)
+
+Tests explicit tab separator.
+
+{{< toastui file="data/events.tsv" file-sep="\t" >}}
+
+## `file-sep` (comma)
+
+Tests explicit comma separator.
+
+{{< toastui file="data/events.csv" file-sep="," >}}
+
+## `defaultView` (month)
+
+Tests month view.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="month" >}}
+
+## `defaultView` (week)
+
+Tests week view.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" >}}
+
+## `defaultView` (day)
+
+Tests day view.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="day" >}}
+
+## `height` (pixels string)
+
+Tests height as a CSS pixel string.
+
+{{< toastui file="data/events.csv" file-sep="," height="400px" >}}
+
+## `height` (numeric coercion)
+
+Tests numeric height coerced to pixels.
+
+{{< toastui file="data/events.csv" file-sep="," height="350" >}}
+
+## `height` (vh units)
+
+Tests height as a viewport-height CSS value.
+
+{{< toastui file="data/events.csv" file-sep="," height="50vh" >}}
+
+## `timegridHeight`
+
+Tests custom timegrid height in week view.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" timegridHeight="300%" >}}
+
+## `navigation` (true)
+
+Tests navigation bar is visible (default).
+
+{{< toastui file="data/events.csv" file-sep="," navigation="true" >}}
+
+## `navigation` (false)
+
+Tests navigation bar is hidden.
+
+{{< toastui file="data/events.csv" file-sep="," navigation="false" >}}
+
+## `date`
+
+Tests setting the initial calendar date.
+
+{{< toastui file="data/events.csv" file-sep="," date="2026-04-17" >}}

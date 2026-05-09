@@ -1,0 +1,52 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: toastui
+  site-url: "https://royfrancis.github.io/quarto-toastui/"
+  description: A Quarto extension for the TOAST UI Calendar library.
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+        aria-label: Home
+      - href: usage.qmd
+        text: Usage
+        aria-label: Usage
+      - text: Test
+        aria-label: Test
+        menu:
+          - href: test.qmd
+            text: Test
+            aria-label: Test
+          - href: test-inline.qmd
+            text: Test Inline
+            aria-label: Test Inline
+          - href: test-yaml.qmd
+            text: Test YAML
+            aria-label: Test YAML
+      - href: playground.qmd
+        text: Playground
+        aria-label: Playground
+      - href: changelog.md
+        text: Versions
+        aria-label: Versions
+    right:
+      - icon: github
+        aria-label: GitHub
+        href: https://github.com/royfrancis/quarto-toastui
+  page-footer:
+    border: false
+    left: "{{< meta current_year >}} Roy Francis • [MIT License](https://choosealicense.com/licenses/mit/)"
+    right: "Published with [Quarto](https://quarto.org/) v{{< meta quarto_version >}}"
+
+format:
+  html:
+    theme: pulse
+    toc: true
+    code-overflow: wrap
+    title-block-banner: true
+
+filters:
+  - custom.lua

@@ -1,0 +1,51 @@
+---
+title: toastui calendar
+subtitle: "Calendar widget for Quarto"
+description: "A quarto extension to create calendar components for HTML and Reveal.js formats"
+format: html
+---
+
+## Overview
+
+This site demonstrates the Quarto TOASTUI Calendar shortcode extension. Here are some of the features:
+
+- Multiple calendar views (month, week, day)
+- Customizable event rendering
+- Timezone support
+- Navigation controls
+- Multiple calendars and colors
+- The shortcode supports
+  - YAML metadata configuration
+  - Inline shortcode parameters
+  - Event data loaded from delimited files
+- HTML and Reveal.js formats are supported
+
+![](preview.webp)
+
+## Quick Start
+
+1. Configure a calendar under toastui in YAML metadata.
+2. Call the shortcode with the calendar key.
+
+```yaml
+---
+toastui:
+  calendar-1:
+    defaultView: week
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+    events:
+      - id: "1"
+        calendarId: cal1
+        title: "Daily Sync"
+        category: time
+        start: "2026-04-09T09:00:00"
+        end: "2026-04-09T09:30:00"
+---
+
+{{< toastui calendar-1 >}}
+```
+
+See the [Usage page](usage.qmd) for usage examples and repo README.md for full list of options.

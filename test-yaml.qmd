@@ -1,0 +1,795 @@
+---
+title: YAML Parameter Test
+format: html
+toastui:
+  # ── Extension Options ───────────────────────────────────────────
+  # height
+  test-height:
+    height: 400px
+    date: "2026-04-14"
+    events:
+      - title: "Height test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  test-height-numeric:
+    height: 500
+    date: "2026-04-14"
+    events:
+      - title: "Height numeric"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # timegridHeight
+  test-timegrid-height:
+    timegridHeight: "300%"
+    date: "2026-04-14"
+    events:
+      - title: "Timegrid height test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # navigation true
+  test-nav-true:
+    navigation: true
+    date: "2026-04-14"
+    events:
+      - title: "Nav on"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # navigation false
+  test-nav-false:
+    navigation: false
+    date: "2026-04-14"
+    events:
+      - title: "Nav off"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # file (TSV)
+  test-file-tsv:
+    file: "data/events.tsv"
+    file-sep: "\t"
+    date: "2026-04-14"
+
+  # file (CSV)
+  test-file-csv:
+    file: "data/events.csv"
+    file-sep: ","
+    date: "2026-04-17"
+
+  # date
+  test-date:
+    date: "2026-04-16"
+    events:
+      - title: "Date test"
+        start: "2026-04-16T10:00:00"
+        end: "2026-04-16T11:00:00"
+
+  # events (inline YAML)
+  test-events-inline:
+    date: "2026-04-14"
+    events:
+      - id: "e1"
+        calendarId: "cal1"
+        title: "Inline event A"
+        category: "time"
+        start: "2026-04-14T08:00:00"
+        end: "2026-04-14T09:00:00"
+        location: "Room A"
+      - id: "e2"
+        calendarId: "cal1"
+        title: "Inline event B"
+        category: "allday"
+        start: "2026-04-15"
+        end: "2026-04-15"
+        isAllday: true
+
+  # calendars
+  test-calendars:
+    date: "2026-04-14"
+    calendars:
+      - id: "cal1"
+        name: "Work"
+        color: "#ffffff"
+        backgroundColor: "#03bd9e"
+        dragBackgroundColor: "#03bd9e"
+        borderColor: "#02836e"
+      - id: "cal2"
+        name: "Personal"
+        color: "#ffffff"
+        backgroundColor: "#00a9ff"
+        dragBackgroundColor: "#00a9ff"
+        borderColor: "#0080cc"
+    events:
+      - calendarId: "cal1"
+        title: "Work event"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - calendarId: "cal2"
+        title: "Personal event"
+        start: "2026-04-14T14:00:00"
+        end: "2026-04-14T15:00:00"
+
+  # ── Pass-through TOAST UI Options ──────────────────────────────
+  # defaultView: week
+  test-view-week:
+    defaultView: week
+    date: "2026-04-14"
+    events:
+      - title: "Week view"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # defaultView: month
+  test-view-month:
+    defaultView: month
+    date: "2026-04-14"
+    events:
+      - title: "Month view"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # defaultView: day
+  test-view-day:
+    defaultView: day
+    date: "2026-04-14"
+    events:
+      - title: "Day view"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # useFormPopup
+  test-useformpopup:
+    useFormPopup: true
+    isReadOnly: false
+    date: "2026-04-14"
+    events:
+      - title: "Form popup test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # useDetailPopup
+  test-usedetailpopup:
+    useDetailPopup: true
+    date: "2026-04-14"
+    events:
+      - title: "Detail popup test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+        location: "Room X"
+
+  # isReadOnly: true
+  test-readonly-true:
+    isReadOnly: true
+    date: "2026-04-14"
+    events:
+      - title: "Read only"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # isReadOnly: false
+  test-readonly-false:
+    isReadOnly: false
+    date: "2026-04-14"
+    events:
+      - title: "Editable"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # usageStatistics
+  test-usagestats:
+    usageStatistics: true
+    date: "2026-04-14"
+    events:
+      - title: "Stats on"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # gridSelection: boolean
+  test-gridselection-bool:
+    gridSelection: false
+    isReadOnly: false
+    date: "2026-04-14"
+    events:
+      - title: "Grid selection off"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # gridSelection: object
+  test-gridselection-obj:
+    isReadOnly: false
+    date: "2026-04-14"
+    gridSelection:
+      enableClick: true
+      enableDblClick: false
+    events:
+      - title: "Grid selection obj"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # timezone
+  test-timezone:
+    date: "2026-04-14"
+    timezone:
+      zones:
+        - timezoneName: "America/New_York"
+          displayLabel: "New York"
+          timezoneOffset: -5
+    events:
+      - title: "Timezone test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # theme
+  test-theme:
+    date: "2026-04-14"
+    theme:
+      common:
+        backgroundColor: "#f0f0f0"
+        saturday:
+          color: "#3162ea"
+        sunday:
+          color: "#e03131"
+    events:
+      - title: "Theme test"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # template (milestone template)
+  test-template:
+    date: "2026-04-14"
+    week:
+      taskView:
+        - milestone
+        - task
+    events:
+      - title: "Template test"
+        category: "milestone"
+        start: "2026-04-14"
+        end: "2026-04-14"
+
+  # ── WeekOptions ─────────────────────────────────────────────────
+  # week.startDayOfWeek
+  test-week-startday:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      startDayOfWeek: 1
+    events:
+      - title: "Week startDay"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.dayNames
+  test-week-daynames:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      dayNames:
+        - Sun
+        - Mon
+        - Tue
+        - Wed
+        - Thu
+        - Fri
+        - Sat
+    events:
+      - title: "Week dayNames"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.narrowWeekend
+  test-week-narrowweekend:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      narrowWeekend: true
+    events:
+      - title: "Narrow weekend"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.workweek
+  test-week-workweek:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      workweek: true
+    events:
+      - title: "Workweek"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.showNowIndicator
+  test-week-nowindicator:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      showNowIndicator: false
+    events:
+      - title: "No now indicator"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.showTimezoneCollapseButton
+  test-week-tz-collapse-btn:
+    defaultView: week
+    date: "2026-04-14"
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+          displayLabel: "Stockholm"
+        - timezoneName: "America/New_York"
+          displayLabel: "New York"
+    week:
+      showTimezoneCollapseButton: true
+    events:
+      - title: "TZ collapse btn"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.timezonesCollapsed
+  test-week-tz-collapsed:
+    defaultView: week
+    date: "2026-04-14"
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+          displayLabel: "Stockholm"
+        - timezoneName: "America/New_York"
+          displayLabel: "New York"
+    week:
+      showTimezoneCollapseButton: true
+      timezonesCollapsed: true
+    events:
+      - title: "TZ collapsed"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.hourStart
+  test-week-hourstart:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      hourStart: 8
+    events:
+      - title: "Hour start 8"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.hourEnd
+  test-week-hourend:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      hourEnd: 18
+    events:
+      - title: "Hour end 18"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.eventView: boolean false
+  test-week-eventview-false:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      eventView: false
+    events:
+      - title: "eventView false"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.eventView: array
+  test-week-eventview-array:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      eventView:
+        - time
+    events:
+      - title: "eventView time only"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.taskView: boolean false
+  test-week-taskview-false:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      taskView: false
+    events:
+      - title: "taskView false"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # week.taskView: array
+  test-week-taskview-array:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      taskView:
+        - milestone
+    events:
+      - title: "taskView milestone only"
+        category: "milestone"
+        start: "2026-04-14"
+        end: "2026-04-14"
+
+  # week.collapseDuplicateEvents
+  test-week-collapse-dupes:
+    defaultView: week
+    date: "2026-04-14"
+    week:
+      collapseDuplicateEvents: true
+    events:
+      - title: "Duplicate"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Duplicate"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # ── MonthOptions ────────────────────────────────────────────────
+  # month.dayNames
+  test-month-daynames:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      dayNames:
+        - SUN
+        - MON
+        - TUE
+        - WED
+        - THU
+        - FRI
+        - SAT
+    events:
+      - title: "Month dayNames"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.startDayOfWeek
+  test-month-startday:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      startDayOfWeek: 1
+    events:
+      - title: "Month startDay"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.narrowWeekend
+  test-month-narrowweekend:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      narrowWeekend: true
+    events:
+      - title: "Month narrow"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.visibleWeeksCount
+  test-month-visibleweeks:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      visibleWeeksCount: 2
+    events:
+      - title: "Visible weeks 2"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.isAlways6Weeks
+  test-month-always6weeks:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      isAlways6Weeks: false
+    events:
+      - title: "Not always 6 weeks"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.workweek
+  test-month-workweek:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      workweek: true
+    events:
+      - title: "Month workweek"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
+  # month.visibleEventCount
+  test-month-eventcount:
+    defaultView: month
+    date: "2026-04-14"
+    month:
+      visibleEventCount: 2
+    events:
+      - title: "Event 1"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Event 2"
+        start: "2026-04-14T11:00:00"
+        end: "2026-04-14T12:00:00"
+      - title: "Event 3"
+        start: "2026-04-14T13:00:00"
+        end: "2026-04-14T14:00:00"
+      - title: "Event 4"
+        start: "2026-04-14T15:00:00"
+        end: "2026-04-14T16:00:00"
+---
+
+Each section below tests one parameter in isolation.
+
+## Extension Options
+
+### height (string)
+
+Height set to `400px`.
+
+{{< toastui test-height >}}
+
+### height (numeric)
+
+Height set to `500` (coerced to `500px`).
+
+{{< toastui test-height-numeric >}}
+
+### timegridHeight
+
+Timegrid height set to `300%`.
+
+{{< toastui test-timegrid-height >}}
+
+### navigation: true
+
+Navigation bar visible.
+
+{{< toastui test-nav-true >}}
+
+### navigation: false
+
+Navigation bar hidden.
+
+{{< toastui test-nav-false >}}
+
+### file (TSV)
+
+Events loaded from `data/events.tsv` with tab separator.
+
+{{< toastui test-file-tsv >}}
+
+### file (CSV)
+
+Events loaded from `data/events.csv` with comma separator.
+
+{{< toastui test-file-csv >}}
+
+### date
+
+Initial date set to `2026-04-16`.
+
+{{< toastui test-date >}}
+
+### events (inline YAML)
+
+Two inline events: one timed, one allday.
+
+{{< toastui test-events-inline >}}
+
+### calendars
+
+Two calendar definitions with distinct colors.
+
+{{< toastui test-calendars >}}
+
+## Pass-through TOAST UI Options
+
+### defaultView: week
+
+{{< toastui test-view-week >}}
+
+### defaultView: month
+
+{{< toastui test-view-month >}}
+
+### defaultView: day
+
+{{< toastui test-view-day >}}
+
+### useFormPopup: true
+
+Click an empty time slot to see the create form popup (isReadOnly is false).
+
+{{< toastui test-useformpopup >}}
+
+### useDetailPopup: true
+
+Click an event to see the detail popup.
+
+{{< toastui test-usedetailpopup >}}
+
+### isReadOnly: true
+
+Events cannot be dragged or edited.
+
+{{< toastui test-readonly-true >}}
+
+### isReadOnly: false
+
+Events can be dragged and edited.
+
+{{< toastui test-readonly-false >}}
+
+### usageStatistics: true
+
+Usage statistics enabled (network request to NHN).
+
+{{< toastui test-usagestats >}}
+
+### gridSelection: false
+
+Date grid click selection disabled.
+
+{{< toastui test-gridselection-bool >}}
+
+### gridSelection: object
+
+Click enabled, double-click disabled.
+
+{{< toastui test-gridselection-obj >}}
+
+### timezone
+
+Timezone set to America/New_York.
+
+{{< toastui test-timezone >}}
+
+### theme
+
+Custom background color applied via theme.
+
+{{< toastui test-theme >}}
+
+### template
+
+Milestone task view with template test.
+
+{{< toastui test-template >}}
+
+## WeekOptions
+
+### week.startDayOfWeek
+
+Start day set to Monday (1).
+
+{{< toastui test-week-startday >}}
+
+### week.dayNames
+
+Custom day name labels.
+
+{{< toastui test-week-daynames >}}
+
+### week.narrowWeekend
+
+Weekend columns narrowed.
+
+{{< toastui test-week-narrowweekend >}}
+
+### week.workweek
+
+Weekends excluded.
+
+{{< toastui test-week-workweek >}}
+
+### week.showNowIndicator: false
+
+Current time indicator hidden.
+
+{{< toastui test-week-nowindicator >}}
+
+### week.showTimezoneCollapseButton
+
+Collapse button shown with two timezone zones.
+
+{{< toastui test-week-tz-collapse-btn >}}
+
+### week.timezonesCollapsed
+
+Sub-timezones start collapsed.
+
+{{< toastui test-week-tz-collapsed >}}
+
+### week.hourStart
+
+Time grid starts at hour 8.
+
+{{< toastui test-week-hourstart >}}
+
+### week.hourEnd
+
+Time grid ends at hour 18.
+
+{{< toastui test-week-hourend >}}
+
+### week.eventView: false
+
+All event panels hidden.
+
+{{< toastui test-week-eventview-false >}}
+
+### week.eventView: [time]
+
+Only time panel shown (allday hidden).
+
+{{< toastui test-week-eventview-array >}}
+
+### week.taskView: false
+
+Task/milestone panels hidden.
+
+{{< toastui test-week-taskview-false >}}
+
+### week.taskView: [milestone]
+
+Only milestone panel shown.
+
+{{< toastui test-week-taskview-array >}}
+
+### week.collapseDuplicateEvents
+
+Two identical events collapsed.
+
+{{< toastui test-week-collapse-dupes >}}
+
+## MonthOptions
+
+### month.dayNames
+
+Custom uppercase day labels.
+
+{{< toastui test-month-daynames >}}
+
+### month.startDayOfWeek
+
+Start day set to Monday (1).
+
+{{< toastui test-month-startday >}}
+
+### month.narrowWeekend
+
+Weekend columns narrowed in month view.
+
+{{< toastui test-month-narrowweekend >}}
+
+### month.visibleWeeksCount
+
+Only 2 weeks visible.
+
+{{< toastui test-month-visibleweeks >}}
+
+### month.isAlways6Weeks: false
+
+Not forced to 6 rows.
+
+{{< toastui test-month-always6weeks >}}
+
+### month.workweek
+
+Weekends excluded in month view.
+
+{{< toastui test-month-workweek >}}
+
+### month.visibleEventCount
+
+Max 2 visible events per day (4 events on same day).
+
+{{< toastui test-month-eventcount >}}

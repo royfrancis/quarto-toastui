@@ -1,0 +1,4 @@
+id,calendarId,title,category,start,end,isAllday,location,backgroundColor
+201,cal1,CSV Demo Meeting,time,2026-04-17T09:30:00,2026-04-17T10:15:00,false,Room East,#03bd9e
+202,cal2,CSV Design Sync,time,2026-04-18T11:00:00,2026-04-18T12:00:00,false,Online,#00a9ff
+203,cal2,CSV Release Day,allday,2026-04-19,2026-04-19,true,Remote,#00a9ff

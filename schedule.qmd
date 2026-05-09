@@ -1,0 +1,44 @@
+---
+title: Schedule
+toastui:
+  schedule:
+    defaultView: week
+    file: "data/schedule.csv"
+    file-sep: ","
+    date: "2026-11-16"
+    useDetailPopup: true
+    isReadOnly: true
+    height: 960px
+    timegridHeight: 900px
+    week:
+      workweek: true
+      taskView: false
+      eventView: ['time']
+      hourStart: 9
+      hourEnd: 21
+      showNowIndicator: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    calendars:
+      - id: "session"
+        name: "Session"
+        color: inherit
+        backgroundColor: "#D6EAF8"
+        dragBackgroundColor: "#D6EAF8"
+        borderColor: "#85C1E9"
+      - id: "free"
+        name: "Free"
+        color: inherit
+        backgroundColor: "#FCF3CF"
+        dragBackgroundColor: "#FCF3CF"
+        borderColor: "#F7DC6F"
+      - id: "extra"
+        name: "Extra"
+        color: inherit
+        backgroundColor: "#E8DAEF"
+        dragBackgroundColor: "#E8DAEF"
+        borderColor: "#BB8FCE"
+---
+
+{{< toastui schedule >}}

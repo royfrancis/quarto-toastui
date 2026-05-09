@@ -1,0 +1,417 @@
+---
+title: Usage
+format: html
+toastui:
+  minimal:
+    defaultView: month
+    date: "2026-04-01"
+    events:
+      - title: "Team Offsite"
+        category: time
+        start: "2026-04-09T10:00:00"
+        end: "2026-04-09T16:00:00"
+
+  day-view:
+    defaultView: day
+    date: "2026-04-15"
+    events:
+      - title: "Standup"
+        category: time
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        category: time
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Lunch"
+        category: time
+        start: "2026-04-15T12:00:00"
+        end: "2026-04-15T13:00:00"
+      - title: "Code Review"
+        category: time
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
+
+  week-view:
+    defaultView: week
+    date: "2026-04-09"
+    events:
+      - title: "Morning Run"
+        calendarId: cal1
+        category: time
+        start: "2026-04-09T06:00:00"
+        end: "2026-04-09T07:00:00"
+      - title: "Team Standup"
+        calendarId: cal2
+        category: time
+        start: "2026-04-09T09:00:00"
+        end: "2026-04-09T09:30:00"
+      - title: "Design Review"
+        calendarId: cal2
+        category: time
+        start: "2026-04-10T14:00:00"
+        end: "2026-04-10T15:30:00"
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+
+  allday:
+    defaultView: week
+    date: "2026-04-14"
+    events:
+      - title: "Sprint Planning"
+        category: allday
+        start: "2026-04-14"
+        end: "2026-04-14"
+        isAllday: true
+      - title: "Conference"
+        category: allday
+        start: "2026-04-16"
+        end: "2026-04-18"
+        isAllday: true
+        backgroundColor: "#ff6b6b"
+      - title: "Workshop"
+        category: time
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T12:00:00"
+
+  popup:
+    defaultView: week
+    date: "2026-04-14"
+    useDetailPopup: true
+    calendars:
+      - id: cal1
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#00a9ff"
+        dragBackgroundColor: "#00a9ff"
+        borderColor: "#00a9ff"
+    events:
+      - title: "Design Review"
+        calendarId: cal1
+        category: time
+        start: "2026-04-14T10:00:00"
+        end: "2026-04-14T11:30:00"
+        location: "Room A"
+        attendees: "Alice"
+      - title: "Sprint Retro"
+        calendarId: cal1
+        category: time
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:00:00"
+        location: "Main Hall"
+        attendees: "Bob"
+
+  tsv-events:
+    defaultView: month
+    date: "2026-04-01"
+    height: 620px
+    file: data/events.tsv
+    file-sep: "\t"
+
+  csv-events:
+    defaultView: week
+    date: "2026-04-17"
+    file: data/events.csv
+    file-sep: ","
+
+  custom-height:
+    defaultView: week
+    date: "2026-04-09"
+    height: 400px
+    navigation: false
+    week:
+      taskView: false
+      eventView: ['time']
+      hourStart: 6
+      hourEnd: 20
+    events:
+      - title: "Morning Run"
+        category: time
+        start: "2026-04-09T06:00:00"
+        end: "2026-04-09T07:00:00"
+      - title: "Team Standup"
+        category: time
+        start: "2026-04-09T09:00:00"
+        end: "2026-04-09T09:30:00"
+
+  schedule:
+    defaultView: week
+    file: "data/schedule.csv"
+    file-sep: ","
+    date: "2026-11-16"
+    useDetailPopup: true
+    height: 960px
+    timegridHeight: 900px
+    week:
+      workweek: true
+      taskView: false
+      eventView: ['time']
+      hourStart: 9
+      hourEnd: 21
+      showNowIndicator: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    calendars:
+      - id: "session"
+        name: "Session"
+        color: inherit
+        backgroundColor: "#D6EAF8"
+        dragBackgroundColor: "#D6EAF8"
+        borderColor: "#85C1E9"
+      - id: "free"
+        name: "Free"
+        color: inherit
+        backgroundColor: "#FCF3CF"
+        dragBackgroundColor: "#FCF3CF"
+        borderColor: "#F7DC6F"
+      - id: "extra"
+        name: "Extra"
+        color: inherit
+        backgroundColor: "#E8DAEF"
+        dragBackgroundColor: "#E8DAEF"
+        borderColor: "#BB8FCE"
+---
+
+The examples below are ordered from simplest to most advanced. Each one introduces new features on top of the previous examples.
+
+## 1. Minimal calendar
+
+The simplest possible calendar: a single event in **month** view. Events are defined directly in the YAML front matter under a named key (here `minimal`), and then rendered with the `toastui` shortcode referencing that key.
+
+Every event needs at least three fields: `title`, `start`, and `end`.
+
+```yaml
+---
+toastui:
+  minimal:
+    defaultView: month
+    date: "2026-04-01"
+    events:
+      - title: "Team Offsite"
+        category: time
+        start: "2026-04-09T10:00:00"
+        end: "2026-04-09T16:00:00"
+---
+```
+
+```markdown
+{{{< toastui minimal >}}}
+```
+
+{{< toastui minimal >}}
+
+## 2. Day view
+
+Switch to a **day** view to see a detailed hour-by-hour timeline. This is useful when you want to focus on a single day's agenda. Set `defaultView: day` and set `date` to the target day.
+
+```yaml
+toastui:
+  day-view:
+    defaultView: day
+    date: "2026-04-15"
+    events:
+      - title: "Standup"
+        category: time
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        ...
+```
+
+```markdown
+{{{< toastui day-view >}}}
+```
+
+{{< toastui day-view >}}
+
+## 3. Week view with calendars
+
+The **week** view spans seven days and is the default view if none is specified. This example also introduces **calendars** — named colour groups that let you visually distinguish event categories. Each event references a calendar via `calendarId`.
+
+```yaml
+toastui:
+  week-view:
+    defaultView: week
+    date: "2026-04-09"
+    events:
+      - title: "Morning Run"
+        calendarId: cal1
+        ...
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+```
+
+```markdown
+{{{< toastui week-view >}}}
+```
+
+{{< toastui week-view >}}
+
+## 4. All-day and multi-day events
+
+Events can span entire days or stretch across multiple days. Set `category: allday` and `isAllday: true` for all-day events. They are rendered in a banner at the top of the calendar. Regular timed events appear alongside them in the time grid.
+
+```yaml
+events:
+  - title: "Sprint Planning"
+    category: allday
+    start: "2026-04-14"
+    end: "2026-04-14"
+    isAllday: true
+  - title: "Conference"
+    category: allday
+    start: "2026-04-16"
+    end: "2026-04-18"
+    isAllday: true
+    backgroundColor: "#ff6b6b"
+  - title: "Workshop"
+    category: time
+    start: "2026-04-15T09:00:00"
+    end: "2026-04-15T12:00:00"
+```
+
+```markdown
+{{{< toastui allday >}}}
+```
+
+{{< toastui allday >}}
+
+## 5. Detail popup
+
+Enable `useDetailPopup: true` to let users click on an event and see a popup with extra information such as `location`, `attendees`, and `state`. The popup only shows these sections when the event explicitly defines them — if a property is not set, its row is hidden.
+
+```yaml
+toastui:
+  popup:
+    defaultView: week
+    date: "2026-04-14"
+    useDetailPopup: true
+    events:
+      - title: "Design Review"
+        start: "2026-04-14T10:00:00"
+        end: "2026-04-14T11:30:00"
+        location: "Room A"
+        attendees: "Alice"
+      ...
+```
+
+```markdown
+{{{< toastui popup >}}}
+```
+
+{{< toastui popup >}}
+
+## 6. Events from a TSV file
+
+Instead of listing events in YAML, point `file` to a **tab-separated** file and set `file-sep` to `"\t"`. The file must have a header row with at least the columns `title`, `start`, and `end`. Optional columns like `calendarId`, `category`, `location`, and `backgroundColor` are picked up automatically.
+
+```yaml
+toastui:
+  tsv-events:
+    defaultView: month
+    date: "2026-04-01"
+    height: 620px
+    file: data/events.tsv
+    file-sep: "\t"
+```
+
+```markdown
+{{{< toastui tsv-events >}}}
+```
+
+{{< toastui tsv-events >}}
+
+## 7. Events from a CSV file
+
+Comma-delimited files work the same way — just change `file-sep` to `","`. This example also uses the **week** view so you can see the timed events on the grid.
+
+```yaml
+toastui:
+  csv-events:
+    defaultView: week
+    date: "2026-04-17"
+    file: data/events.csv
+    file-sep: ","
+```
+
+```markdown
+{{{< toastui csv-events >}}}
+```
+
+{{< toastui csv-events >}}
+
+## 8. Fully inline shortcode
+
+You can skip YAML metadata entirely and pass **all** options directly in the shortcode. This style is handy for quick one-off calendars or prototypes. Note that inline arguments cannot express complex nested structures like `calendars` or `week` options.
+
+```markdown
+{{{< toastui file="data/events.tsv" file-sep="\t" defaultView="day" date="2026-04-15" >}}}
+```
+
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="day" date="2026-04-15" >}}
+
+## 9. Inline override of metadata
+
+You can **combine** YAML metadata with inline arguments. The metadata key provides the base configuration, and any inline arguments override individual values. Here the `week-view` config is reused but switched to month view with a different date and height.
+
+```markdown
+{{{< toastui week-view defaultView="month" date="2026-04-01" height="500px" >}}}
+```
+
+{{< toastui week-view defaultView="month" date="2026-04-01" height="500px" >}}
+
+## 10. Full-featured schedule
+
+This example puts it all together: events loaded from a CSV file, custom calendar colours for different event types, detail popups, timezone configuration, a workweek-only week view with custom hour range, and an enlarged time grid. This pattern is well suited for multi-day workshops and conference programmes. `height` and `timegridHeight` are manually set to remove scroll bar.
+
+```yaml
+toastui:
+  schedule:
+    defaultView: week
+    file: "data/schedule.csv"
+    file-sep: ","
+    date: "2026-11-16"
+    useDetailPopup: true
+    height: 960px
+    timegridHeight: 900px
+    week:
+      workweek: true
+      taskView: false
+      eventView: ['time']
+      hourStart: 9
+      hourEnd: 21
+      showNowIndicator: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    calendars:
+      - id: "session"
+        name: "Session"
+        backgroundColor: "#D6EAF8"
+        borderColor: "#85C1E9"
+      - id: "free"
+        name: "Free"
+        backgroundColor: "#FCF3CF"
+        borderColor: "#F7DC6F"
+      - id: "extra"
+        name: "Extra"
+        backgroundColor: "#E8DAEF"
+        borderColor: "#BB8FCE"
+```
+
+```markdown
+{{{< toastui schedule >}}}
+```
+
+{{< toastui schedule >}}

@@ -1,0 +1,21 @@
+id	calendarId	title	body	category	start	end	isAllday	goingDuration	comingDuration	location	attendees	dueDateClass	recurrenceRule	state	isVisible	isPending	isFocused	isReadOnly	isPrivate	color	backgroundColor	dragBackgroundColor	borderColor
+301	cal1	Workshop Kickoff	Welcome and overview of the week	time	2026-04-20T09:00:00	2026-04-20T10:00:00	false	0	0	Main Hall		schedule	 	Busy	true	false	false	false	false		#03bd9e		
+302	cal1	Python Basics	Introduction to Python programming	time	2026-04-20T10:30:00	2026-04-20T12:00:00	false	0	0	Room A		schedule		Busy	true	false	false	false	false		#03bd9e		
+303	cal2	Lab: Data Wrangling	Hands-on data manipulation exercises	time	2026-04-20T13:00:00	2026-04-20T15:00:00	false	0	0	Lab 1		lab		Busy	true	false	false	false	false		#00a9ff		
+304	cal2	Q&A Session	Open questions and discussion	time	2026-04-20T15:30:00	2026-04-20T16:30:00	false	0	0	Room A		support		Busy	true	false	false	false	false		#00a9ff		
+305	cal1	Statistics Refresher	Core statistical concepts	time	2026-04-21T09:00:00	2026-04-21T10:30:00	false	0	0	Room B		schedule		Busy	true	false	false	false	false		#03bd9e		
+306	cal1	R for Analysis	Data analysis with R	time	2026-04-21T11:00:00	2026-04-21T12:30:00	false	0	0	Room B		schedule		Busy	true	false	false	false	false		#03bd9e		
+307	cal2	Lab: Visualization	Creating effective visualizations	time	2026-04-21T13:30:00	2026-04-21T15:30:00	false	0	0	Lab 2		lab		Busy	true	false	false	false	false		#00a9ff		
+308	cal2	Mentor Clinic	One-on-one mentoring	time	2026-04-21T16:00:00	2026-04-21T17:00:00	false	0	0	Open Space		support		Busy	true	false	false	false	false		#00a9ff		
+309	cal1	Machine Learning Intro	Overview of ML concepts	time	2026-04-22T09:00:00	2026-04-22T10:30:00	false	0	0	Room C		schedule		Busy	true	false	false	false	false		#03bd9e		
+310	cal1	Feature Engineering	Building features from raw data	time	2026-04-22T11:00:00	2026-04-22T12:30:00	false	0	0	Room C		schedule		Busy	true	false	false	false	false		#03bd9e		
+311	cal2	Lab: Model Training	Train and evaluate models	time	2026-04-22T13:30:00	2026-04-22T15:30:00	false	0	0	Lab 1		lab		Busy	true	false	false	false	false		#00a9ff		
+312	cal2	Lightning Talks	Short presentations from participants	time	2026-04-22T16:00:00	2026-04-22T17:00:00	false	0	0	Main Hall		support		Busy	true	false	false	false	false		#00a9ff		
+313	cal1	Deep Learning Basics	Neural network fundamentals	time	2026-04-23T09:00:00	2026-04-23T10:30:00	false	0	0	Room D		schedule		Busy	true	false	false	false	false		#03bd9e		
+314	cal1	Computer Vision	Image recognition techniques	time	2026-04-23T11:00:00	2026-04-23T12:30:00	false	0	0	Room D		schedule		Busy	true	false	false	false	false		#03bd9e		
+315	cal2	Lab: Image Models	Build and test image classifiers	time	2026-04-23T13:30:00	2026-04-23T15:30:00	false	0	0	Lab 3		lab		Busy	true	false	false	false	false		#00a9ff		
+316	cal2	Project Coaching	Guidance on capstone projects	time	2026-04-23T16:00:00	2026-04-23T17:00:00	false	0	0	Open Space		support		Busy	true	false	false	false	false		#00a9ff		
+317	cal1	NLP Fundamentals	Text processing and analysis	time	2026-04-24T09:00:00	2026-04-24T10:30:00	false	0	0	Room E		schedule		Busy	true	false	false	false	false		#03bd9e		
+318	cal1	Reproducible Workflows	Best practices for reproducibility	time	2026-04-24T11:00:00	2026-04-24T12:30:00	false	0	0	Room E		schedule		Busy	true	false	false	false	false		#03bd9e		
+319	cal2	Capstone Sprint	Work on final projects	time	2026-04-24T13:30:00	2026-04-24T16:00:00	false	0	0	Lab 2		lab		Busy	true	false	false	false	false		#00a9ff		
+320	cal2	Closing Session	Wrap-up and certificates	time	2026-04-24T16:15:00	2026-04-24T17:00:00	false	0	0	Main Hall		support		Busy	true	false	false	false	false		#00a9ff			

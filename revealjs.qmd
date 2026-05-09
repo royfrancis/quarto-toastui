@@ -1,0 +1,50 @@
+---
+title: RevealJS Support
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+toastui:
+  reveal-demo:
+    defaultView: month
+    height: 520px
+    isReadOnly: true
+    file: data/events.tsv
+    file-sep: "\t"
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+---
+
+## RevealJS support
+
+The shortcode now renders in revealjs output as well as standard html output.
+Other formats remain ignored.
+
+## Notes
+
+- The calendar is interactive inside slides.
+- Keep slide calendars relatively compact so they fit within slide bounds.
+- If you need multiple calendars in one deck, prefer one per slide.
+
+## Example slide
+
+This example uses YAML metadata plus file-based events.
+
+```markdown
+{{< toastui reveal-demo >}}
+```
+
+{{< toastui reveal-demo >}}
+
+## Inline example
+
+```markdown
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" height="420px" >}}
+```
+
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" height="420px" >}}

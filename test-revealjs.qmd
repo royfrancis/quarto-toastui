@@ -1,0 +1,495 @@
+---
+title: Test RevealJS
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+toastui:
+  options-all:
+    defaultView: week
+    height: 520px
+    navigation: true
+    date: "2026-04-15"
+    file: data/events.tsv
+    file-sep: "\t"
+    isReadOnly: true
+    useDetailPopup: true
+    usageStatistics: false
+    gridSelection:
+      enableClick: true
+      enableDblClick: false
+    month:
+      startDayOfWeek: 1
+      narrowWeekend: true
+      workweek: false
+      visibleWeeksCount: 0
+      isAlways6Weeks: true
+      visibleEventCount: 6
+    week:
+      startDayOfWeek: 1
+      narrowWeekend: false
+      workweek: false
+      showNowIndicator: true
+      showTimezoneCollapseButton: false
+      timezonesCollapsed: false
+      hourStart: 6
+      hourEnd: 22
+      eventView: true
+      taskView: true
+      collapseDuplicateEvents: false
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+          displayLabel: Stockholm
+        - timezoneName: Europe/London
+          displayLabel: London
+    theme:
+      common:
+        backgroundColor: "#ffffff"
+    template:
+      milestone: "${title}"
+    calendars:
+      - id: cal1
+        name: Personal
+        color: "#ffffff"
+        backgroundColor: "#03bd9e"
+        dragBackgroundColor: "#03bd9e"
+        borderColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#00a9ff"
+        dragBackgroundColor: "#00a9ff"
+        borderColor: "#00a9ff"
+
+  options-no-nav:
+    defaultView: day
+    date: "2026-04-15"
+    navigation: false
+    file: data/events.tsv
+    file-sep: "\t"
+    height: 520px
+    week:
+      eventView:
+        - time
+      taskView: false
+
+  options-week-time-only-no-buttons:
+    defaultView: week
+    navigation: false
+    isReadOnly: false
+    date: "2026-04-17"
+    file: data/events.csv
+    file-sep: ","
+    height: 520px
+    week:
+      eventView:
+        - time
+      taskView: false
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+---
+
+## Full configuration
+
+<details>
+<summary>Show code</summary>
+
+```yaml
+---
+toastui:
+  options-all:
+    defaultView: week
+    height: 660px
+    navigation: true
+    date: "2026-04-15"
+    file: data/events.tsv
+    file-sep: "\t"
+    isReadOnly: true
+    useDetailPopup: true
+    usageStatistics: false
+    gridSelection:
+      enableClick: true
+      enableDblClick: false
+    month:
+      startDayOfWeek: 1
+      narrowWeekend: true
+      workweek: false
+      visibleWeeksCount: 0
+      isAlways6Weeks: true
+      visibleEventCount: 6
+    week:
+      startDayOfWeek: 1
+      narrowWeekend: false
+      workweek: false
+      showNowIndicator: true
+      showTimezoneCollapseButton: false
+      timezonesCollapsed: false
+      hourStart: 6
+      hourEnd: 22
+      eventView: true
+      taskView: true
+      collapseDuplicateEvents: false
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+          displayLabel: Stockholm
+        - timezoneName: Europe/London
+          displayLabel: London
+    theme:
+      common:
+        backgroundColor: "#ffffff"
+    template:
+      milestone: "${title}"
+    calendars:
+      - id: cal1
+        name: Personal
+        color: "#ffffff"
+        backgroundColor: "#03bd9e"
+        dragBackgroundColor: "#03bd9e"
+        borderColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#00a9ff"
+        dragBackgroundColor: "#00a9ff"
+        borderColor: "#00a9ff"
+
+---
+
+{{{< toastui options-all >}}}
+```
+
+</details>
+
+{{< toastui options-all >}}
+
+::: {.notes}
+- Calendar renders with custom options
+- Events load from file
+- Initial date is applied
+- Navigation controls are visible
+:::
+
+## Navigation disabled
+
+<details>
+<summary>Show code</summary>
+
+```yaml
+---
+toastui:
+  options-no-nav:
+    defaultView: day
+    date: "2026-04-15"
+    navigation: false
+    file: data/events.tsv
+    file-sep: "\t"
+    height: 520px
+    week:
+      eventView:
+        - time
+      taskView: false
+---
+
+{{{< toastui options-no-nav >}}}
+```
+
+</details>
+
+{{< toastui options-no-nav >}}
+
+::: {.notes}
+- No custom nav toolbar is shown
+- Events load from file and are visible in the calendar
+- Initial date is applied
+- Week view shows only time panel and hides task/milestone panels
+:::
+
+## Week view no navigation
+
+<details>
+<summary>Show code</summary>
+
+```yaml
+---
+toastui:
+  options-week-time-only-no-buttons:
+    defaultView: week
+    navigation: false
+    isReadOnly: false
+    date: "2026-04-17"
+    file: data/events.csv
+    file-sep: ","
+    height: 520px
+    week:
+      eventView:
+        - time
+      taskView: false
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+---
+
+{{{< toastui options-week-time-only-no-buttons >}}}
+```
+
+</details>
+
+{{< toastui options-week-time-only-no-buttons >}}
+
+::: {.notes}
+- Calendar opens in week view
+- Milestone/task/allday panels are hidden (`taskView: false`, `eventView: [time]`)
+- Month/week/day buttons are hidden (custom navigation disabled)
+:::
+
+## Basic inline
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.tsv" file-sep="\t" defaultView="month" height="520px" navigation="true" date="2026-04-12" >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="month" height="520px" navigation="true" date="2026-04-12" >}}
+
+::: {.notes}
+- Inline configuration
+- file-sep escape handling works
+:::
+
+## CSV file
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.csv" file-sep="," defaultView="month" date="2026-04-15" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="month" date="2026-04-15" height="520px" >}}
+
+::: {.notes}
+- Events load from `data/events.csv`
+- Comma-separated parsing works when `file-sep` is set to `,`
+:::
+
+## Workshop week
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/workshop-week.tsv" file-sep="\t" defaultView="week" date="2026-04-20" height="520px" useDetailPopup="true" week='{"hourStart": 9, "hourEnd": 17, "eventView":["time"], "taskView": false}' >}}}
+```
+
+</details>
+
+{{< toastui file="data/workshop-week.tsv" file-sep="\t" defaultView="week" date="2026-04-20" height="520px" useDetailPopup="true" week='{"hourStart": 9, "hourEnd": 17, "eventView":["time"], "taskView": false}' >}}
+
+::: {.notes}
+- 20 workshop sessions load from `data/workshop-week.tsv`
+- Calendar opens in week view
+- Events span across a full training week
+:::
+
+## Missing critical column start
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/bad-missing-start.csv" file-sep="," defaultView="week" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/bad-missing-start.csv" file-sep="," defaultView="week" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Error reports missing required column `start`
+- No terminal errors are shown
+:::
+
+## Missing critical column title
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/bad-missing-title.tsv" file-sep="\t" defaultView="month" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/bad-missing-title.tsv" file-sep="\t" defaultView="month" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Error reports missing required column `title`
+- No terminal errors are shown
+:::
+
+## Empty file
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/bad-empty.tsv" file-sep="\t" defaultView="week" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/bad-empty.tsv" file-sep="\t" defaultView="week" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Error reports empty events file
+- No terminal errors are shown
+:::
+
+## File does not exist
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/does-not-exist.tsv" file-sep="\t" defaultView="week" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/does-not-exist.tsv" file-sep="\t" defaultView="week" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Error reports that the file cannot be opened
+- No terminal errors are shown
+:::
+
+## Multiple bad rows list output
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/bad-multiple-row-errors.csv" file-sep="," defaultView="week" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/bad-multiple-row-errors.csv" file-sep="," defaultView="week" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Multiple validation messages are shown as a list
+- No terminal errors are shown
+:::
+
+## File without header row
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/bad-no-header.tsv" file-sep="\t" defaultView="week" height="520px" >}}}
+```
+
+</details>
+
+{{< toastui file="data/bad-no-header.tsv" file-sep="\t" defaultView="week" height="520px" >}}
+
+::: {.notes}
+- A styled error box is shown in the output document
+- Error reports missing required columns (`title`, `start`, `end`)
+- No terminal errors are shown
+:::
+
+## Inline YAML style week object
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" date="2026-04-15" height="520px" week='{"hourStart": 7, "hourEnd": 19, "eventView":["time"], "taskView": false, "workweek": true}' >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" date="2026-04-15" height="520px" week='{"hourStart": 7, "hourEnd": 19, "eventView":["time"], "taskView": false, "workweek": true}' >}}
+
+::: {.notes}
+- Demonstrates inline YAML-compatible object syntax for `week`
+- Uses workweek mode and custom hours
+:::
+
+## Inline YAML style month object
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.csv" file-sep="," defaultView="month" date="2026-04-01" height="520px" month='{"startDayOfWeek": 1, "narrowWeekend": true, "isAlways6Weeks": true, "visibleEventCount": 4}' >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="month" date="2026-04-01" height="520px" month='{"startDayOfWeek": 1, "narrowWeekend": true, "isAlways6Weeks": true, "visibleEventCount": 4}' >}}
+
+::: {.notes}
+- Demonstrates inline YAML-compatible object syntax for `month`
+- Shows compact month rendering controls
+:::
+
+## Inline YAML style calendars array
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" height="520px" calendars='[{"id":"cal1","name":"Personal","backgroundColor":"#03bd9e","color":"#ffffff"},{"id":"cal2","name":"Work","backgroundColor":"#00a9ff","color":"#ffffff"}]' >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" height="520px" calendars='[{"id":"cal1","name":"Personal","backgroundColor":"#03bd9e","color":"#ffffff"},{"id":"cal2","name":"Work","backgroundColor":"#00a9ff","color":"#ffffff"}]' >}}
+
+::: {.notes}
+- Demonstrates inline YAML-compatible array syntax for `calendars`
+- Calendar colors are set directly in shortcode arguments
+:::
+
+## Inline YAML style timezone object
+
+<details>
+<summary>Show code</summary>
+
+```markdown
+{{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" date="2026-04-15" height="520px" timezone='{"zones":[{"timezoneName":"Europe/Stockholm","displayLabel":"Stockholm"},{"timezoneName":"Europe/London","displayLabel":"London"}]}' week='{"showTimezoneCollapseButton": true, "timezonesCollapsed": false}' >}}}
+```
+
+</details>
+
+{{< toastui file="data/events.tsv" file-sep="\t" defaultView="week" date="2026-04-15" height="520px" timezone='{"zones":[{"timezoneName":"Europe/Stockholm","displayLabel":"Stockholm"},{"timezoneName":"Europe/London","displayLabel":"London"}]}' week='{"showTimezoneCollapseButton": true, "timezonesCollapsed": false}' >}}
+
+::: {.notes}
+- Demonstrates inline YAML-compatible object syntax for `timezone`
+- Shows multi-timezone labels in week view
+:::

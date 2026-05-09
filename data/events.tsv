@@ -1,0 +1,4 @@
+id	calendarId	title	category	start	end	isAllday	location	backgroundColor
+101	cal1	TSV Demo Meeting	time	2026-04-14T09:00:00	2026-04-14T10:00:00	false	Room North	#03bd9e
+102	cal2	TSV Sprint Review	time	2026-04-15T13:00:00	2026-04-15T14:00:00	false	Studio B	#00a9ff
+103	cal1	TSV Planning Day	allday	2026-04-16	2026-04-16	true	HQ	#03bd9e
