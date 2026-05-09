@@ -27,7 +27,7 @@ jobs:
           version: 1.9.35
 
       - run: quarto --version
-      - run: quarto add --no-prompt royfrancis/quarto-toast
+      - run: quarto add --no-prompt royfrancis/quarto-toastui
       - run: quarto render
 
       - name: Configure github pages

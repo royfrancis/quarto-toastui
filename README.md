@@ -1,4 +1,4 @@
-# toastui ![build](https://github.com/royfrancis/quarto-toastui/workflows/deploy/badge.svg)
+# toastui ![deploy](https://github.com/royfrancis/quarto-toastui/workflows/deploy/badge.svg) ![status: experimental](https://github.com/GIScience/badges/raw/master/status/experimental.svg)
 
 A Quarto shortcode extension for embedding TOAST UI Calendar in HTML output.
 
