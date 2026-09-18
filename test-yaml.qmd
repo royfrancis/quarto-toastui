@@ -153,12 +153,31 @@ toastui:
   # useDetailPopup
   test-usedetailpopup:
     useDetailPopup: true
+    timeFormat: "24h"
     date: "2026-04-14"
+    calendars:
+      - id: popup
+        name: Popup tests
+        backgroundColor: "#03bd9e"
     events:
-      - title: "Detail popup test"
+      - id: popup-same-day
+        title: "Detail popup test"
+        calendarId: popup
         start: "2026-04-14T09:00:00"
         end: "2026-04-14T10:00:00"
         location: "Room X"
+      - id: popup-cross-day
+        title: "Cross-day popup test"
+        calendarId: popup
+        start: "2026-04-14T23:30:00"
+        end: "2026-04-15T01:15:00"
+      - id: popup-all-day
+        title: "All-day popup test"
+        calendarId: popup
+        category: allday
+        isAllday: true
+        start: "2026-04-14"
+        end: "2026-04-16"
 
   # isReadOnly: true
   test-readonly-true:
@@ -612,7 +631,9 @@ Click an empty time slot to see the create form popup (isReadOnly is false).
 
 ### useDetailPopup: true
 
-Click an event to see the detail popup.
+Timed event labels and the time-grid axis should use 24-hour time. Click an event
+and confirm its detail popup matches. The fixture covers same-day, cross-day,
+and all-day ranges.
 
 {{< toastui test-usedetailpopup >}}
 

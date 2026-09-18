@@ -14,6 +14,7 @@ toastui:
     file-sep: "\t"
     isReadOnly: true
     useDetailPopup: true
+    timeFormat: "24h"
     usageStatistics: false
     gridSelection:
       enableClick: true
@@ -112,6 +113,7 @@ toastui:
     file-sep: "\t"
     isReadOnly: true
     useDetailPopup: true
+    timeFormat: "24h"
     usageStatistics: false
     gridSelection:
       enableClick: true
@@ -174,6 +176,7 @@ toastui:
 - Events load from file
 - Initial date is applied
 - Navigation controls are visible
+- Timed events, time-grid labels, and detail popups use 24-hour format
 :::
 
 ## Navigation disabled

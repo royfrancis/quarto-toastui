@@ -83,6 +83,7 @@ toastui:
     defaultView: week
     date: "2026-04-14"
     useDetailPopup: true
+    timeFormat: "24h"
     calendars:
       - id: cal1
         name: Work
@@ -94,7 +95,7 @@ toastui:
       - title: "Design Review"
         calendarId: cal1
         category: time
-        start: "2026-04-14T10:00:00"
+        start: "2026-04-14T09:00:00"
         end: "2026-04-14T11:30:00"
         location: "Room A"
         attendees: "Alice"
@@ -289,7 +290,7 @@ events:
 
 ## 5. Detail popup
 
-Enable `useDetailPopup: true` to let users click on an event and see a popup with extra information such as `location`, `attendees`, and `state`. The popup only shows these sections when the event explicitly defines them — if a property is not set, its row is hidden.
+Enable `useDetailPopup: true` to let users click on an event and see a popup with extra information such as `location`, `attendees`, and `state`. The popup only shows these sections when the event explicitly defines them — if a property is not set, its row is hidden. Set `timeFormat` to `"12h"` or `"24h"` to use one format for rendered timed event labels, the time-grid axis, the current-time indicator, and this popup. The default is `"24h"`. The separate event form popup time picker remains in TOAST UI's built-in 24-hour format.
 
 ```yaml
 toastui:
@@ -297,9 +298,10 @@ toastui:
     defaultView: week
     date: "2026-04-14"
     useDetailPopup: true
+    timeFormat: "24h"
     events:
       - title: "Design Review"
-        start: "2026-04-14T10:00:00"
+        start: "2026-04-14T09:00:00"
         end: "2026-04-14T11:30:00"
         location: "Room A"
         attendees: "Alice"

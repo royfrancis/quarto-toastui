@@ -54,11 +54,14 @@ These are extension-level options handled directly by the shortcode.
 | height | string or number | `600px` | Calendar container height. Numeric values are coerced to pixels; string values are used as-is. |
 | timegridHeight | string | `200%` | Height of the inner `.toastui-calendar-timegrid` element. Controls the scrollable time grid size in week/day views. |
 | navigation | boolean-like | `true` | Shows or hides the built-in navigation controls: prev, today, next, and month/week/day buttons. |
+| timeFormat | `'12h' \| '24h'` | `'24h'` | Sets one clock format for rendered timed event labels, time-grid labels, the current-time indicator, and the event detail popup. |
 | file | string | none | Path to a delimited text file containing events. Absolute paths are used directly; relative paths are resolved against the input document directory. |
 | file-sep | string | `\t` | Delimiter used when parsing `file`. |
 | date | string | unset | Initial calendar date passed to `new Date(...)`. |
 | events | array of objects | none | Inline event data from YAML metadata. Ignored if `file` is also provided. |
 | calendars | `CalendarInfo[]` | `[]` | Calendar definitions used for labels and colors. |
+
+`timeFormat` does not change the built-in event form popup's time picker. TOAST UI Calendar 2.1.3 configures that separate control as 24-hour and does not expose a Calendar option or template for changing it.
 
 ## Pass-through TOAST UI Calendar Options
 

@@ -30,6 +30,10 @@ local function render_shortcode(args, kwargs, meta, raw_args, context)
     local calendars = config.build_calendars(cfg)
     local event_list, event_errors = events.build_events(cfg, doc_dir)
     local initial_date = config.initial_date(cfg)
+    local time_format, time_format_error = config.time_format(cfg)
+    if time_format_error then
+      table.insert(event_errors, time_format_error)
+    end
 
     local show_nav = config.show_nav(cfg)
     local height = utils.normalize_height(cfg.height)
@@ -40,6 +44,7 @@ local function render_shortcode(args, kwargs, meta, raw_args, context)
       calendars = calendars,
       events = event_list,
       initial_date = initial_date,
+      time_format = time_format,
       show_nav = show_nav,
       height = height,
       timegrid_height = timegrid_height,
@@ -63,7 +68,8 @@ local function render_shortcode(args, kwargs, meta, raw_args, context)
       result.initial_date,
       result.show_nav,
       result.height,
-      result.timegrid_height
+      result.timegrid_height,
+      result.time_format
     )
   end)
 

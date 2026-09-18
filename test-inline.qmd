@@ -88,3 +88,24 @@ Tests navigation bar is hidden.
 Tests setting the initial calendar date.
 
 {{< toastui file="data/events.csv" file-sep="," date="2026-04-17" >}}
+
+## `timeFormat` (default 24-hour)
+
+Without a `timeFormat` parameter, confirm that timed events and the time-grid
+axis use 24-hour time. Click an event and confirm that its detail popup also uses
+24-hour time without AM/PM.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" useDetailPopup="true" >}}
+
+## `timeFormat` (12-hour)
+
+Confirm that timed events and the time-grid axis use 12-hour time with AM/PM.
+Click an event and confirm that its detail popup uses the same format.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" useDetailPopup="true" timeFormat="12h" >}}
+
+## `timeFormat` (invalid)
+
+An unsupported value should render a styled error block listing the accepted values.
+
+{{< toastui timeFormat="invalid" >}}

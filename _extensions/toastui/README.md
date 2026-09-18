@@ -68,6 +68,7 @@ Events source precedence:
 | String-field hydration from raw metadata | Avoids Pandoc metadata edge cases (notably separator and inline scalar conversion). |
 | File separator escape normalization (`\\t`, `\\n`) | Makes inline shortcode usage predictable and ergonomic. |
 | Required event-field validation (`title`, `start`, `end`) | Catches malformed data early and emits warnings while keeping render resilient. |
+| Generated time templates | Keep executable JavaScript in the renderer while exposing a validated `12h`/`24h` YAML option. |
 
 ## Supported TOAST UI Features
 
@@ -78,6 +79,7 @@ Events source precedence:
 | Event data from metadata (`events`) | Supported | Accepts list of event objects. |
 | Event data from text files (`file`, `file-sep`) | Supported | Header-driven parsing to objects. |
 | Custom toolbar (prev/today/next + view buttons) | Supported | Controlled with `navigation`. |
+| Consistent clock format | Supported | Defaults to `24h`; set `timeFormat` to `12h` to override rendered event labels, time-grid labels, the current-time indicator, and detail popups. The separate form-popup picker remains upstream-controlled. |
 
 ## Not Supported / Out of Scope
 

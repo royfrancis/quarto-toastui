@@ -29,7 +29,7 @@ end
 --- @param raw_meta_cfg table
 --- @return nil
 local function hydrate_string_fields(cfg, raw_meta_cfg)
-  local string_keys = { "file", "file-sep", "defaultView", "height", "timegridHeight", "date" }
+  local string_keys = { "file", "file-sep", "defaultView", "height", "timegridHeight", "date", "timeFormat" }
   for _, key in ipairs(string_keys) do
     if raw_meta_cfg[key] ~= nil then
       local s = pandoc.utils.stringify(raw_meta_cfg[key])
@@ -136,6 +136,20 @@ end
 --- @return string|nil
 function M.initial_date(cfg)
   return cfg.date
+end
+
+--- Read and validate the calendar time format.
+--- @param cfg table
+--- @return string|nil,string|nil
+function M.time_format(cfg)
+  local value = cfg.timeFormat
+  if value == nil or value == "" then
+    return "24h", nil
+  end
+  if value ~= "12h" and value ~= "24h" then
+    return nil, "toastui: timeFormat must be '12h' or '24h'"
+  end
+  return value, nil
 end
 
 --- Determine whether navigation controls should be shown.

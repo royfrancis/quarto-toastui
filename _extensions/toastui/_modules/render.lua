@@ -138,8 +138,9 @@ end
 --- @param show_nav boolean
 --- @param height string
 --- @param timegrid_height string|nil
+--- @param time_format string|nil
 --- @return PandocRawBlock
-function M.render_calendar_block(opts, calendars, events, initial_date, show_nav, height, timegrid_height)
+function M.render_calendar_block(opts, calendars, events, initial_date, show_nav, height, timegrid_height, time_format)
   local container_id = next_calendar_id()
   local html_parts = {}
 
@@ -168,6 +169,59 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
 
   if calendars then
     table.insert(html_parts, '  opts.calendars = ' .. utils.to_json(calendars) .. ';')
+  end
+
+  if time_format then
+    table.insert(html_parts, '  var timeFormat = ' .. utils.to_json(time_format) .. ';')
+    table.insert(html_parts, [[  opts.template = opts.template || {};
+  function pad(value) {
+    return String(value).padStart(2, '0');
+  }
+  function formatTime(value) {
+    var hours = value.getHours();
+    var minutes = pad(value.getMinutes());
+    if (timeFormat === '24h') {
+      return pad(hours) + ':' + minutes;
+    }
+    return (hours % 12 || 12) + ':' + minutes + (hours < 12 ? ' am' : ' pm');
+  }
+  function formatDate(value) {
+    return value.getFullYear() + '.' + pad(value.getMonth() + 1) + '.' + pad(value.getDate());
+  }
+  function isSameDate(left, right) {
+    return left.getFullYear() === right.getFullYear() &&
+      left.getMonth() === right.getMonth() &&
+      left.getDate() === right.getDate();
+  }
+  function escapeHtml(value) {
+    var replacements = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function(character) {
+      return replacements[character];
+    });
+  }
+
+  opts.template.time = function(event) {
+    var title = escapeHtml(event.title);
+    return event.start ? '<strong>' + formatTime(event.start) + '</strong>&nbsp;' + title : title;
+  };
+  opts.template.timegridDisplayPrimaryTime = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.timegridDisplayTime = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.timegridNowIndicatorLabel = function(model) {
+    return formatTime(model.time);
+  };
+  opts.template.popupDetailDate = function(event) {
+    var sameDate = isSameDate(event.start, event.end);
+    if (event.isAllday) {
+      return formatDate(event.start) + (sameDate ? '' : ' - ' + formatDate(event.end));
+    }
+
+    var end = (sameDate ? '' : formatDate(event.end) + ' ') + formatTime(event.end);
+    return formatDate(event.start) + ' ' + formatTime(event.start) + ' - ' + end;
+  };]])
   end
 
   table.insert(html_parts, '  var cal = new tui.Calendar(document.getElementById(' .. utils.to_json(container_id) .. '), opts);')
