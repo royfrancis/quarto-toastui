@@ -139,8 +139,10 @@ end
 --- @param height string
 --- @param timegrid_height string|nil
 --- @param time_format string|nil
+--- @param event_detail_items table|nil
+--- @param popup_detail_items table|nil
 --- @return PandocRawBlock
-function M.render_calendar_block(opts, calendars, events, initial_date, show_nav, height, timegrid_height, time_format)
+function M.render_calendar_block(opts, calendars, events, initial_date, show_nav, height, timegrid_height, time_format, event_detail_items, popup_detail_items)
   local container_id = next_calendar_id()
   local html_parts = {}
 
@@ -156,11 +158,29 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
     table.insert(html_parts, '<div class="toastui-calendar-wrapper">')
   end
 
-  local detail_popup_class = ""
+  local detail_popup_classes = {}
   if opts.useDetailPopup then
-    detail_popup_class = " toastui-calendar-detail-popup-enabled"
+    table.insert(detail_popup_classes, "toastui-calendar-detail-popup-enabled")
+
+    local selected_detail_items = {}
+    for _, item in ipairs(popup_detail_items or {}) do
+      selected_detail_items[item] = true
+    end
+    local detail_item_classes = {
+      { name = "location", class = "toastui-calendar-detail-exclude-location" },
+      { name = "recurrenceRule", class = "toastui-calendar-detail-exclude-recurrence-rule" },
+      { name = "attendees", class = "toastui-calendar-detail-exclude-attendees" },
+      { name = "state", class = "toastui-calendar-detail-exclude-state" },
+      { name = "calendar", class = "toastui-calendar-detail-exclude-calendar" },
+      { name = "body", class = "toastui-calendar-detail-exclude-body" },
+    }
+    for _, item in ipairs(detail_item_classes) do
+      if not selected_detail_items[item.name] then
+        table.insert(detail_popup_classes, item.class)
+      end
+    end
   end
-  table.insert(html_parts, '<div id="' .. utils.escape_html_attr(container_id) .. '" class="' .. detail_popup_class .. '" style="height: ' .. utils.escape_html_attr(height) .. ';"></div>')
+  table.insert(html_parts, '<div id="' .. utils.escape_html_attr(container_id) .. '" class="' .. table.concat(detail_popup_classes, " ") .. '" style="height: ' .. utils.escape_html_attr(height) .. ';"></div>')
   table.insert(html_parts, '</div>')
 
   table.insert(html_parts, '<script>')
@@ -173,6 +193,7 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
 
   if time_format then
     table.insert(html_parts, '  var timeFormat = ' .. utils.to_json(time_format) .. ';')
+    table.insert(html_parts, '  var eventDetailItems = ' .. utils.to_json(event_detail_items or {}) .. ';')
     table.insert(html_parts, [[  opts.template = opts.template || {};
   function pad(value) {
     return String(value).padStart(2, '0');
@@ -199,10 +220,33 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
       return replacements[character];
     });
   }
+  function eventDetailValue(event, item) {
+    if (item === 'calendar') {
+      var calendars = opts.calendars || [];
+      for (var index = 0; index < calendars.length; index++) {
+        if (calendars[index].id === event.calendarId) return calendars[index].name || '';
+      }
+      return '';
+    }
+
+    var value = event[item];
+    if (item === 'attendees' && Array.isArray(value)) return value.join(', ');
+    return value == null ? '' : value;
+  }
+  function renderEventDetails(event) {
+    var details = eventDetailItems.map(function(item) {
+      var value = eventDetailValue(event, item);
+      if (value === '') return '';
+      return '<span class="toastui-calendar-event-detail-item toastui-calendar-event-detail-' + item + '">' +
+        escapeHtml(value) + '</span>';
+    }).join('');
+    return details ? '<span class="toastui-calendar-event-detail-items">' + details + '</span>' : '';
+  }
 
   opts.template.time = function(event) {
     var title = escapeHtml(event.title);
-    return event.start ? '<strong>' + formatTime(event.start) + '</strong>&nbsp;' + title : title;
+    var titleAndTime = event.start ? '<strong>' + formatTime(event.start) + '</strong>&nbsp;' + title : title;
+    return titleAndTime + renderEventDetails(event);
   };
   opts.template.timegridDisplayPrimaryTime = function(model) {
     return formatTime(model.time);
@@ -224,7 +268,37 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
   };]])
   end
 
-  table.insert(html_parts, '  var cal = new tui.Calendar(document.getElementById(' .. utils.to_json(container_id) .. '), opts);')
+  table.insert(html_parts, '  var container = document.getElementById(' .. utils.to_json(container_id) .. ');')
+  table.insert(html_parts, '  var cal = new tui.Calendar(container, opts);')
+  table.insert(html_parts, [[  function fitShortTimedEvent(event) {
+    if (!event.start || !event.end || event.isAllday || event.category === 'allday') return;
+
+    var duration = event.end.getTime() - event.start.getTime();
+    var minimumDuration = 30 * 60 * 1000;
+    if (duration <= 0 || duration >= minimumDuration) return;
+
+    var weekOptions = opts.week || {};
+    var hourStart = weekOptions.hourStart == null ? 0 : Number(weekOptions.hourStart);
+    var hourEnd = weekOptions.hourEnd == null ? 24 : Number(weekOptions.hourEnd);
+    var visibleDuration = (hourEnd - hourStart) * 60 * 60 * 1000;
+    if (visibleDuration <= 0) return;
+
+    var height = duration / visibleDuration * 100;
+    if (event.id == null || event.id === '') return;
+    var eventId = String(event.id);
+    container.querySelectorAll('.toastui-calendar-event-time').forEach(function(element) {
+      if (element.getAttribute('data-event-id') !== eventId) return;
+      element.style.height = 'max(1px, calc(' + height + '% - 2px))';
+      element.style.minHeight = '0';
+      element.style.overflow = 'hidden';
+      var content = element.querySelector('.toastui-calendar-event-time-content');
+      if (content) {
+        content.style.minHeight = '0';
+        content.style.overflow = 'hidden';
+      }
+    });
+  }
+  cal.on('afterRenderEvent', fitShortTimedEvent);]])
 
   if events then
     -- Patch events so that detail-popup sections only appear for
@@ -233,7 +307,8 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
     -- sections to always render.  Setting explicit falsy values
     -- before createEvents() prevents those defaults from kicking in.
     table.insert(html_parts, '  var __ev = ' .. utils.to_json(events) .. ';')
-    table.insert(html_parts, [[  __ev.forEach(function(e) {
+    table.insert(html_parts, [[  __ev.forEach(function(e, index) {
+    if (e.id == null || e.id === '') e.id = ']] .. container_id .. [[-event-' + index;
     if (!e.state) e.state = '';
     if (!e.attendees || (Array.isArray(e.attendees) && e.attendees.length === 0)) e.attendees = null;
   });]])
