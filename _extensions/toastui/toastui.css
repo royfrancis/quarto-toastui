@@ -127,6 +127,11 @@
   display: none;
 }
 
+/* decrease line height */
+.toastui-calendar-detail-container .toastui-calendar-content {
+  line-height: 1.2;
+}
+
 /* Replace bundled raster icons with resolution-independent SVGs. */
 .toastui-calendar-icon.toastui-calendar-ic-title {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE0IDE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yIDNoMTBNNyAzdjlNNC41IDEyaDUiLz48L3N2Zz4=");
@@ -157,7 +162,8 @@
 }
 
 .toastui-calendar-icon.toastui-calendar-ic-user-b {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjYiIGN5PSIzLjUiIHI9IjIiLz48cGF0aCBkPSJNMiAxMGMuNS0yLjIgMS45LTMuMyA0LTMuM3MzLjUgMS4xIDQgMy4zIi8+PC9zdmc+");
+  --toastui-icon-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjYiIGN5PSIzLjUiIHI9IjIiLz48cGF0aCBkPSJNMiAxMGMuNS0yLjIgMS45LTMuMyA0LTMuM3MzLjUgMS4xIDQgMy4zIi8+PC9zdmc+");
+  background-image: var(--toastui-icon-image);
 }
 
 .toastui-calendar-icon.toastui-calendar-ic-edit {
@@ -205,17 +211,27 @@
 }
 
 .toastui-calendar-ic-location-b {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik02IDExczMuNS0zIDMuNS02QTMuNSAzLjUgMCAxIDAgMi41IDVDMi41IDggNiAxMSA2IDExWiIvPjxjaXJjbGUgY3g9IjYiIGN5PSI1IiByPSIxIi8+PC9zdmc+");
+  --toastui-icon-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik02IDExczMuNS0zIDMuNS02QTMuNSAzLjUgMCAxIDAgMi41IDVDMi41IDggNiAxMSA2IDExWiIvPjxjaXJjbGUgY3g9IjYiIGN5PSI1IiByPSIxIi8+PC9zdmc+");
+  background-image: var(--toastui-icon-image);
 }
 
 .toastui-calendar-ic-state-b {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjYiIGN5PSI2IiByPSI0LjUiLz48cGF0aCBkPSJtNCA2IDEuNCAxLjQgMy0zIi8+PC9zdmc+");
+  --toastui-icon-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjYiIGN5PSI2IiByPSI0LjUiLz48cGF0aCBkPSJtNCA2IDEuNCAxLjQgMy0zIi8+PC9zdmc+");
+  background-image: var(--toastui-icon-image);
 }
 
 .toastui-calendar-ic-repeat-b {
-  background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05LjUgNCA4IDIuNU05LjUgNCA4IDUuNU05LjUgNEg1YTMgMyAwIDAgMC0yLjcgMS43TTIuNSA4IDQgOS41TTIuNSA4IDQgNi41TTIuNSA4SDdhMyAzIDAgMCAwIDIuNy0xLjciLz48L3N2Zz4=");
+  --toastui-icon-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMiIgaGVpZ2h0PSIxMiIgdmlld0JveD0iMCAwIDEyIDEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik05LjUgNCA4IDIuNU05LjUgNCA4IDUuNU05LjUgNEg1YTMgMyAwIDAgMC0yLjcgMS43TTIuNSA4IDQgOS41TTIuNSA4IDQgNi41TTIuNSA4SDdhMyAzIDAgMCAwIDIuNy0xLjciLz48L3N2Zz4=");
+  background-image: var(--toastui-icon-image);
 }
 
 .toastui-calendar-resize-handler-x {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjQiIHZpZXdCb3g9IjAgMCA4IDQiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzMzMyIgc3Ryb2tlLXdpZHRoPSIxLjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEgLjc1aDZNMiAyLjc1aDQiIHN0cm9rZT0iI2ZmZiIvPjwvc3ZnPg==");
+}
+
+.toastui-calendar-icon.toastui-calendar-event-detail-icon {
+  background-color: currentColor;
+  background-image: none;
+  -webkit-mask: var(--toastui-icon-image) no-repeat;
+  mask: var(--toastui-icon-image) no-repeat;
 }
