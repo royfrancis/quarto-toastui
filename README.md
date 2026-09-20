@@ -69,7 +69,7 @@ These are extension-level options handled directly by the shortcode.
 | `timegridHeight` | string | `200%` | Height of the inner `.toastui-calendar-timegrid` element. Controls the scrollable time grid size in week/day views. |
 | `navigation` | boolean-like | `true` | Shows or hides the built-in navigation controls: prev, today, next, and month/week/day buttons. |
 | `timeFormat` | `'12h' \| '24h'` | `'24h'` | Sets one clock format for rendered timed event labels, time-grid labels, the current-time indicator, and the event detail popup. |
-| `eventDetailItems` | string or string[] | `[]` | Selects event fields to render inside timed events. Any field present in the event data is accepted; known TOAST UI fields like location, attendees, state etc. use their native icons, while custom fields render as `field: value`. |
+| `eventDetailItems` | string or string[] | `[]` | Selects event fields to render inside timed events. Any field present in the event data is accepted; known TOAST UI fields like location, attendees, calendar, state etc. use their native icons, while custom fields render as `field: value`. |
 | `popupDetailItems` | string or string[] | `[]` | Selects event fields to render in the detail popup. Known TOAST UI fields use their native popup rows and icons; custom fields are appended as `field: value`. |
 | `file` | string | none | Path to a delimited text file containing events. Absolute paths are used directly; relative paths are resolved against the input document directory. |
 | `file-sep` | string | `\t` | Delimiter used when parsing `file`. |
