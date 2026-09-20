@@ -118,6 +118,22 @@
   display: none;
 }
 
+.toastui-calendar-detail-container .toastui-calendar-detail-item:has(> .toastui-calendar-icon) {
+  position: relative;
+  padding-left: 20px;
+  text-indent: 0;
+}
+
+.toastui-calendar-detail-container .toastui-calendar-detail-item > .toastui-calendar-icon {
+  position: absolute;
+  top: 1px;
+  left: 0;
+}
+
+.toastui-calendar-detail-container .toastui-calendar-detail-item > .toastui-calendar-calendar-dot {
+  top: 2px;
+}
+
 .toastui-calendar-custom-detail-item strong {
   font-weight: 600;
 }
@@ -243,6 +259,6 @@
 }
 
 /* popup body text */
-.calendar-detail-item-separate {
+.toastui-calendar-detail-item-separate {
   margin-top: 5px;
 }
