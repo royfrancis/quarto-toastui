@@ -6,6 +6,14 @@ local utils = require('./utils')
 local M = {}
 local calendar_counter = 0
 local ERROR_BOX_STYLE = "padding: 0.75rem 1rem; border: 1px solid #f5c6cb; border-radius: 6px; color: #721c24; background: #f8d7da;"
+local NATIVE_DETAIL_ITEMS = {
+  location = true,
+  recurrenceRule = true,
+  attendees = true,
+  state = true,
+  calendar = true,
+  body = true,
+}
 
 --- Generate a unique DOM id for each calendar instance.
 --- @return string
@@ -145,6 +153,7 @@ end
 function M.render_calendar_block(opts, calendars, events, initial_date, show_nav, height, timegrid_height, time_format, event_detail_items, popup_detail_items)
   local container_id = next_calendar_id()
   local html_parts = {}
+  local has_custom_popup_details = false
 
   local tg = timegrid_height or "200%"
   table.insert(html_parts, '<style>#' .. utils.escape_html_attr(container_id) .. ' .toastui-calendar-timegrid { height: ' .. utils.escape_html_attr(tg) .. '; min-height: unset; }</style>')
@@ -179,6 +188,13 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
         table.insert(detail_popup_classes, item.class)
       end
     end
+    for _, item in ipairs(popup_detail_items or {}) do
+      if not NATIVE_DETAIL_ITEMS[item] then
+        has_custom_popup_details = true
+        table.insert(detail_popup_classes, "toastui-calendar-detail-has-custom")
+        break
+      end
+    end
   end
   table.insert(html_parts, '<div id="' .. utils.escape_html_attr(container_id) .. '" class="' .. table.concat(detail_popup_classes, " ") .. '" style="height: ' .. utils.escape_html_attr(height) .. ';"></div>')
   table.insert(html_parts, '</div>')
@@ -194,7 +210,23 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
   if time_format then
     table.insert(html_parts, '  var timeFormat = ' .. utils.to_json(time_format) .. ';')
     table.insert(html_parts, '  var eventDetailItems = ' .. utils.to_json(event_detail_items or {}) .. ';')
+    table.insert(html_parts, '  var popupDetailItems = ' .. utils.to_json(popup_detail_items or {}) .. ';')
     table.insert(html_parts, [[  opts.template = opts.template || {};
+  var detailItemIcons = {
+    location: 'toastui-calendar-ic-location-b',
+    recurrenceRule: 'toastui-calendar-ic-repeat-b',
+    attendees: 'toastui-calendar-ic-user-b',
+    state: 'toastui-calendar-ic-state-b',
+    calendar: 'toastui-calendar-calendar-dot'
+  };
+  var nativeDetailItems = {
+    location: true,
+    recurrenceRule: true,
+    attendees: true,
+    state: true,
+    calendar: true,
+    body: true
+  };
   function pad(value) {
     return String(value).padStart(2, '0');
   }
@@ -230,17 +262,45 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
     }
 
     var value = event[item];
-    if (item === 'attendees' && Array.isArray(value)) return value.join(', ');
+    if (value == null && event.raw) value = event.raw[item];
+    if (Array.isArray(value)) return value.join(', ');
     return value == null ? '' : value;
   }
   function renderEventDetails(event) {
     var details = eventDetailItems.map(function(item) {
       var value = eventDetailValue(event, item);
       if (value === '') return '';
-      return '<span class="toastui-calendar-event-detail-item toastui-calendar-event-detail-' + item + '">' +
-        escapeHtml(value) + '</span>';
+      var iconClass = Object.prototype.hasOwnProperty.call(detailItemIcons, item) ? detailItemIcons[item] : '';
+      var iconStyle = item === 'calendar' && event.backgroundColor ? ' style="background-color:' + escapeHtml(event.backgroundColor) + '"' : '';
+      var icon = iconClass ? '<span class="toastui-calendar-icon toastui-calendar-event-detail-icon ' + iconClass + '"' + iconStyle + '></span>' : '';
+      var label = Object.prototype.hasOwnProperty.call(nativeDetailItems, item) ? '' : '<strong>' + escapeHtml(item) + ':</strong> ';
+      return '<span class="toastui-calendar-event-detail-item">' + icon + label + escapeHtml(value) + '</span>';
     }).join('');
     return details ? '<span class="toastui-calendar-event-detail-items">' + details + '</span>' : '';
+  }
+  function renderCustomPopupDetails(event) {
+    var customItems = popupDetailItems.filter(function(item) {
+      return !Object.prototype.hasOwnProperty.call(nativeDetailItems, item);
+    });
+    if (customItems.length === 0) return true;
+
+    var section = container.querySelector('.toastui-calendar-section-detail');
+    if (!section) return false;
+    section.querySelectorAll('.toastui-calendar-custom-detail-item').forEach(function(element) {
+      element.remove();
+    });
+    customItems.forEach(function(item) {
+      var value = eventDetailValue(event, item);
+      if (value === '') return;
+      var row = document.createElement('div');
+      row.className = 'toastui-calendar-detail-item toastui-calendar-custom-detail-item';
+      var label = document.createElement('strong');
+      label.textContent = item + ': ';
+      row.appendChild(label);
+      row.appendChild(document.createTextNode(String(value)));
+      section.appendChild(row);
+    });
+    return true;
   }
 
   opts.template.time = function(event) {
@@ -270,6 +330,18 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
 
   table.insert(html_parts, '  var container = document.getElementById(' .. utils.to_json(container_id) .. ');')
   table.insert(html_parts, '  var cal = new tui.Calendar(container, opts);')
+  if has_custom_popup_details then
+    table.insert(html_parts, [[  cal.on('clickEvent', function(info) {
+    var observer = new MutationObserver(function() {
+      if (renderCustomPopupDetails(info.event)) observer.disconnect();
+    });
+    observer.observe(container, { childList: true, subtree: true });
+    window.setTimeout(function() {
+      renderCustomPopupDetails(info.event);
+      observer.disconnect();
+    }, 100);
+  });]])
+  end
   table.insert(html_parts, [[  function fitShortTimedEvent(event) {
     if (!event.start || !event.end || event.isAllday || event.category === 'allday') return;
 
@@ -309,6 +381,8 @@ function M.render_calendar_block(opts, calendars, events, initial_date, show_nav
     table.insert(html_parts, '  var __ev = ' .. utils.to_json(events) .. ';')
     table.insert(html_parts, [[  __ev.forEach(function(e, index) {
     if (e.id == null || e.id === '') e.id = ']] .. container_id .. [[-event-' + index;
+    var source = Object.assign({}, e, e.raw && typeof e.raw === 'object' ? e.raw : {});
+    e.raw = source;
     if (!e.state) e.state = '';
     if (!e.attendees || (Array.isArray(e.attendees) && e.attendees.length === 0)) e.attendees = null;
   });]])

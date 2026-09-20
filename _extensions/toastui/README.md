@@ -81,8 +81,8 @@ Events source precedence:
 | Event data from text files (`file`, `file-sep`) | Supported | Header-driven parsing to objects. |
 | Custom toolbar (prev/today/next + view buttons) | Supported | Controlled with `navigation`. |
 | Consistent clock format | Supported | Defaults to `24h`; set `timeFormat` to `12h` to override rendered event labels, time-grid labels, the current-time indicator, and detail popups. The separate form-popup picker remains upstream-controlled. |
-| Selectable event details | Supported | `eventDetailItems` adds location, recurrence, attendee, state, calendar, or body lines to timed events. |
-| Selectable detail-popup rows | Supported | `popupDetailItems` independently opts into the same values without passing either option to the upstream constructor. |
+| Selectable event details | Supported | `eventDetailItems` accepts any event field. Known TOAST UI fields use native icons; custom fields render as labeled values. |
+| Selectable detail-popup rows | Supported | `popupDetailItems` independently accepts any event field. Known fields keep native popup rows and icons; custom fields are appended as labeled values. |
 
 ## Not Supported / Out of Scope
 

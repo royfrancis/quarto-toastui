@@ -167,20 +167,9 @@ local function detail_items(cfg, key)
     return nil, "toastui: " .. key .. " must be a string or array"
   end
 
-  local allowed = {
-    location = true,
-    recurrenceRule = true,
-    attendees = true,
-    state = true,
-    calendar = true,
-    body = true,
-  }
   for _, item in ipairs(items) do
     if type(item) ~= "string" then
       return nil, "toastui: " .. key .. " must contain only strings"
-    end
-    if not allowed[item] then
-      return nil, "toastui: " .. key .. " contains an unknown item: " .. tostring(item)
     end
   end
 
