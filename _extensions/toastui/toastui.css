@@ -77,10 +77,11 @@
   white-space: nowrap;
 }
 
-.toastui-calendar-event-time:has(.toastui-calendar-event-detail-items),
-.toastui-calendar-event-time:has(.toastui-calendar-event-detail-items) .toastui-calendar-event-time-content {
-  min-height: max-content;
-  overflow: visible;
+.toastui-calendar-template-time:has(.toastui-calendar-event-detail-items) {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Disable pointer cursor on events by default */
