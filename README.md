@@ -2,6 +2,22 @@
 
 A Quarto shortcode extension for embedding TOAST UI Calendar in HTML output.
 
+> [!NOTE]
+> All TOASTUI features are not supported by this extension.
+> Interactive calendar input through the widget is not supported.
+
+## Features
+
+- Embed TOAST UI Calendar in Quarto HTML output
+- Data input via YAML metadata, inline shortcode arguments, or text files
+- Configuration via YAML metadata or inline shortcode arguments
+- Multiple calendar views (month, week, day)
+- Customizable event and popup details
+- 12/24hr formats
+- Timezone support
+- Responsive layout
+- HTML format is supported
+
 ## Install
 
 Add this extension to your project:
@@ -22,8 +38,6 @@ Define a calendar in YAML metadata. This example creates a calendar with a singl
 toastui:
   calendar-1:
     defaultView: week
-    height: 700px
-    isReadOnly: true
     calendars:
       - id: cal1
         name: Personal
@@ -51,17 +65,17 @@ These are extension-level options handled directly by the shortcode.
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | calendar key (positional) | string | none | Selects the metadata block at `toastui.<key>`. |
-| height | string or number | `600px` | Calendar container height. Numeric values are coerced to pixels; string values are used as-is. |
-| timegridHeight | string | `200%` | Height of the inner `.toastui-calendar-timegrid` element. Controls the scrollable time grid size in week/day views. |
-| navigation | boolean-like | `true` | Shows or hides the built-in navigation controls: prev, today, next, and month/week/day buttons. |
-| timeFormat | `'12h' \| '24h'` | `'24h'` | Sets one clock format for rendered timed event labels, time-grid labels, the current-time indicator, and the event detail popup. |
-| file | string | none | Path to a delimited text file containing events. Absolute paths are used directly; relative paths are resolved against the input document directory. |
-| file-sep | string | `\t` | Delimiter used when parsing `file`. |
-| date | string | unset | Initial calendar date passed to `new Date(...)`. |
-| events | array of objects | none | Inline event data from YAML metadata. Ignored if `file` is also provided. |
-| calendars | `CalendarInfo[]` | `[]` | Calendar definitions used for labels and colors. |
-
-`timeFormat` does not change the built-in event form popup's time picker. TOAST UI Calendar 2.1.3 configures that separate control as 24-hour and does not expose a Calendar option or template for changing it.
+| `height` | string or number | `600px` | Calendar container height. Numeric values are coerced to pixels; string values are used as-is. |
+| `timegridHeight` | string | `200%` | Height of the inner `.toastui-calendar-timegrid` element. Controls the scrollable time grid size in week/day views. |
+| `navigation` | boolean-like | `true` | Shows or hides the built-in navigation controls: prev, today, next, and month/week/day buttons. |
+| `timeFormat` | `'12h' \| '24h'` | `'24h'` | Sets one clock format for rendered timed event labels, time-grid labels, the current-time indicator, and the event detail popup. |
+| `eventDetailItems` | string or string[] | `[]` | Selects event fields to render inside timed events. Any field present in the event data is accepted; known TOAST UI fields like location, attendees, state etc. use their native icons, while custom fields render as `field: value`. |
+| `popupDetailItems` | string or string[] | `[]` | Selects event fields to render in the detail popup. Known TOAST UI fields use their native popup rows and icons; custom fields are appended as `field: value`. |
+| `file` | string | none | Path to a delimited text file containing events. Absolute paths are used directly; relative paths are resolved against the input document directory. |
+| `file-sep` | string | `\t` | Delimiter used when parsing `file`. |
+| `date` | string | unset | Initial calendar date passed to `new Date(...)`. |
+| `events` | array of objects | none | Inline event data from YAML metadata. Ignored if `file` is also provided. |
+| `calendars` | `CalendarInfo[]` | `[]` | Calendar definitions used for labels and colors. |
 
 ## Pass-through TOAST UI Calendar Options
 
@@ -69,47 +83,47 @@ These are passed into the Calendar constructor if present.
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| defaultView | `'month' \| 'week' \| 'day'` | `'week'` | Sets the initial view mode. |
-| useFormPopup | `boolean` | `false` | Enables the built-in event create/edit popup. Upstream date/time picker styles are also required when used. |
-| useDetailPopup | `boolean` | `false` | Enables the built-in event detail popup. |
-| isReadOnly | `boolean` | upstream: `false`; extension default: `true` | Makes the calendar non-editable. |
-| usageStatistics | `boolean` | upstream: `true`; extension default: `false` | Controls TOAST UI usage statistics collection. |
-| eventFilter | `(event) => boolean` | `(event) => !!event.isVisible` | Upstream option. Not practically configurable through YAML because it requires a JavaScript function. |
-| gridSelection | `boolean \| { enableClick?: boolean, enableDblClick?: boolean }` | `true` | Configures click and double-click date selection behavior. |
-| timezone | `TimezoneOptions` | `{ zones: [] }` | Configures calendar time zone handling. |
-| theme | `ThemeObject` | `DEFAULT_THEME` | Applies TOAST UI theme customizations. |
-| template | `TemplateObject` | `DEFAULT_TEMPLATE` | Provides custom render templates for events and labels. |
-| week | `WeekOptions` | `DEFAULT_WEEK_OPTIONS` | Weekly and daily view configuration options. |
-| month | `MonthOptions` | `DEFAULT_MONTH_OPTIONS` | Monthly view configuration options. |
+| `defaultView` | `'month' \| 'week' \| 'day'` | `'week'` | Sets the initial view mode. |
+| `useFormPopup` | `boolean` | `false` | Enables the built-in event create/edit popup. Upstream date/time picker styles are also required when used. |
+| `useDetailPopup` | `boolean` | `false` | Enables the built-in event detail popup. |
+| `isReadOnly` | `boolean` | upstream: `false`; extension default: `true` | Makes the calendar non-editable. |
+| `usageStatistics` | `boolean` | upstream: `true`; extension default: `false` | Controls TOAST UI usage statistics collection. |
+| `eventFilter` | `(event) => boolean` | `(event) => !!event.isVisible` | Upstream option. Not practically configurable through YAML because it requires a JavaScript function. |
+| `gridSelection` | `boolean \| { enableClick?: boolean, enableDblClick?: boolean }` | `true` | Configures click and double-click date selection behavior. |
+| `timezone` | `TimezoneOptions` | `{ zones: [] }` | Configures calendar time zone handling. |
+| `theme` | `ThemeObject` | `DEFAULT_THEME` | Applies TOAST UI theme customizations. |
+| `template` | `TemplateObject` | `DEFAULT_TEMPLATE` | Provides custom render templates for events and labels. |
+| `week` | `WeekOptions` | `DEFAULT_WEEK_OPTIONS` | Weekly and daily view configuration options. |
+| `month` | `MonthOptions` | `DEFAULT_MONTH_OPTIONS` | Monthly view configuration options. |
 
-### WeekOptions defaults
-
-| Field | Type | Default | Description |
-|---|---|---|---|
-| startDayOfWeek | `number` | `0` | Start day of week (`0` Sunday to `6` Saturday). |
-| dayNames | `string[7]` | `[]` | Optional custom labels for week/day views. |
-| narrowWeekend | `boolean` | `false` | Narrows weekend columns in week/day views. |
-| workweek | `boolean` | `false` | Excludes weekends in week/day views. |
-| showNowIndicator | `boolean` | `true` | Shows current-time indicator in week/day view. |
-| showTimezoneCollapseButton | `boolean` | `false` | Shows timezone collapse button when using multiple zones. |
-| timezonesCollapsed | `boolean` | `false` | Starts sub-timezones collapsed. |
-| hourStart | `number` | `0` | Start hour for time grid. |
-| hourEnd | `number` | `24` | End hour for time grid. |
-| eventView | `boolean \| ('allday' \| 'time')[]` | `true` | Controls allday/time event panels. |
-| taskView | `boolean \| ('milestone' \| 'task')[]` | `true` | Controls milestone/task panels. |
-| collapseDuplicateEvents | `boolean \| object` | `false` | Duplicate event collapsing behavior. |
-
-### MonthOptions defaults
+### Week Options
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| dayNames | `string[7]` | `['sun','mon','tue','wed','thu','fri','sat']` | Day labels in month view. |
-| startDayOfWeek | `number` | `0` | Start day of week (`0` Sunday to `6` Saturday). |
-| narrowWeekend | `boolean` | `false` | Narrows weekend columns in month view. |
-| visibleWeeksCount | `number` | `0` | Number of visible weeks (`0` means six-week behavior). |
-| isAlways6Weeks | `boolean` | `true` | Always render six rows in month view. |
-| workweek | `boolean` | `false` | Excludes weekends in month view. |
-| visibleEventCount | `number` | `6` | Max visible events per day cell. |
+| `startDayOfWeek` | `number` | `0` | Start day of week (`0` Sunday to `6` Saturday). |
+| `dayNames` | `string[7]` | `[]` | Optional custom labels for week/day views. |
+| `narrowWeekend` | `boolean` | `false` | Narrows weekend columns in week/day views. |
+| `workweek` | `boolean` | `false` | Excludes weekends in week/day views. |
+| `showNowIndicator` | `boolean` | `true` | Shows current-time indicator in week/day view. |
+| `showTimezoneCollapseButton` | `boolean` | `false` | Shows timezone collapse button when using multiple zones. |
+| `timezonesCollapsed` | `boolean` | `false` | Starts sub-timezones collapsed. |
+| `hourStart` | `number` | `0` | Start hour for time grid. |
+| `hourEnd` | `number` | `24` | End hour for time grid. |
+| `eventView` | `boolean \| ('allday' \| 'time')[]` | `true` | Controls allday/time event panels. |
+| `taskView` | `boolean \| ('milestone' \| 'task')[]` | `true` | Controls milestone/task panels. |
+| `collapseDuplicateEvents` | `boolean \| object` | `false` | Duplicate event collapsing behavior. |
+
+### Month Options
+
+| Field | Type | Default | Description |
+|---|---|---|---|
+| `dayNames` | `string[7]` | `['sun','mon','tue','wed','thu','fri','sat']` | Day labels in month view. |
+| `startDayOfWeek` | `number` | `0` | Start day of week (`0` Sunday to `6` Saturday). |
+| `narrowWeekend` | `boolean` | `false` | Narrows weekend columns in month view. |
+| `visibleWeeksCount` | `number` | `0` | Number of visible weeks (`0` means six-week behavior). |
+| `isAlways6Weeks` | `boolean` | `true` | Always render six rows in month view. |
+| `workweek` | `boolean` | `false` | Excludes weekends in month view. |
+| `visibleEventCount` | `number` | `6` | Max visible events per day cell. |
 
 For complete option schemas and semantics, see TOAST UI Calendar docs:
 
@@ -124,36 +138,36 @@ Event objects (from `events:` YAML or event files) map to TOAST UI `EventObject`
 
 | Field | Type | Required | Description |
 |---|---|---|---|
-| title | `string` | yes | Event title shown on the card. |
-| start | `string \| number \| Date` | yes | Event start date/time. |
-| end | `string \| number \| Date` | yes | Event end date/time. |
+| `title` | `string` | yes | Event title shown on the card. |
+| `start` | `string \| number \| Date` | yes | Event start date/time. |
+| `end` | `string \| number \| Date` | yes | Event end date/time. |
 
 ### Commonly used EventObject fields
 
 | Field | Type | Default | Description |
 |---|---|---|---|
-| id | `string` | auto/internal if omitted | Event identifier. Recommended for updates/deletes. |
-| calendarId | `string` | none | Calendar id this event belongs to (should match a `calendars[].id` entry). |
-| title | `string` | none | Event title text. |
-| body | `string` | empty | Additional text content. |
-| category | `'milestone' \| 'task' \| 'time' \| 'allday'` | inferred/upstream behavior | Event type affecting rendering panel. |
-| isAllday | `boolean` | `false` | Marks event as all-day. |
-| start | `string \| number \| Date \| TZDate` | none | Start date/time. |
-| end | `string \| number \| Date \| TZDate` | none | End date/time. |
-| location | `string` | empty | Location label on event detail/card templates. |
-| attendees | `string[]` | `[]` | Optional attendee list. |
-| state | `'Busy' \| 'Free' \| string` | hidden | Free/busy state. Only shown in the detail popup when explicitly set. |
-| dueDateClass | `string` | empty | Optional class/tag used by task/milestone displays. |
-| recurrenceRule | `string` | empty | Recurrence rule text. |
-| isVisible | `boolean` | `true` | Visibility flag (also used by default `eventFilter`). |
-| isPending | `boolean` | `false` | Marks event as pending. |
-| isFocused | `boolean` | `false` | Focus state metadata. |
-| isReadOnly | `boolean` | inherits calendar/global behavior | Per-event read-only override. |
-| isPrivate | `boolean` | `false` | Marks event as private. |
-| color | `string` | inherited | Event text color. |
-| backgroundColor | `string` | inherited | Event card background color. |
-| dragBackgroundColor | `string` | inherited | Event background while dragging. |
-| borderColor | `string` | inherited | Event border color. |
+| `id` | `string` | auto/internal if omitted | Event identifier. Recommended for updates/deletes. |
+| `calendarId` | `string` | none | Calendar id this event belongs to (should match a `calendars[].id` entry). |
+| `title` | `string` | none | Event title text. |
+| `body` | `string` | empty | Additional text content. |
+| `category` | `'milestone' \| 'task' \| 'time' \| 'allday'` | inferred/upstream behavior | Event type affecting rendering panel. |
+| `isAllday` | `boolean` | `false` | Marks event as all-day. |
+| `start` | `string \| number \| Date \| TZDate` | none | Start date/time. |
+| `end` | `string \| number \| Date \| TZDate` | none | End date/time. |
+| `location` | `string` | empty | Location label on event detail/card templates. |
+| `attendees` | `string[]` | `[]` | Optional attendee list. |
+| `state` | `'Busy' \| 'Free' \| string` | hidden | Free/busy state. Only shown in event or popup details when selected and explicitly set. |
+| `dueDateClass` | `string` | empty | Optional class/tag used by task/milestone displays. |
+| `recurrenceRule` | `string` | empty | Recurrence rule text. |
+| `isVisible` | `boolean` | `true` | Visibility flag (also used by default `eventFilter`). |
+| `isPending` | `boolean` | `false` | Marks event as pending. |
+| `isFocused` | `boolean` | `false` | Focus state metadata. |
+| `isReadOnly` | `boolean` | inherits calendar/global behavior | Per-event read-only override. |
+| `isPrivate` | `boolean` | `false` | Marks event as private. |
+| `color` | `string` | inherited | Event text color. |
+| `backgroundColor` | `string` | inherited | Event card background color. |
+| `dragBackgroundColor` | `string` | inherited | Event background while dragging. |
+| `borderColor` | `string` | inherited | Event border color. |
 
 ### Notes
 
@@ -162,7 +176,9 @@ Event objects (from `events:` YAML or event files) map to TOAST UI `EventObject`
 - String values `true` and `false` in files are converted to booleans.
 - Text color does not auto-contrast in this extension; set `color` explicitly if needed.
 - When using `useDetailPopup: true`, events should have a `calendarId` that references a defined `calendars` entry. Without this, the popup may render with incorrect colours and fail to dismiss on click.
-- The detail popup only shows `location`, `attendees`, and `state` sections when the event explicitly provides those fields. Upstream TOAST UI defaults (e.g. `state: "Busy"`) are suppressed so that the popup stays clean for events that don't define them.
+- Optional timed-event details are opt-in through `eventDetailItems`; optional popup rows are independently opt-in through `popupDetailItems`.
+- Both options accept arbitrary event fields, including columns loaded from delimited files. Known TOAST UI fields retain their native icons; custom fields are labeled with their field names.
+- A selected detail appears only when the event provides matching data; upstream defaults such as `state: "Busy"` remain suppressed for events that do not define them.
 - For full upstream definitions, see EventObject docs:
   - https://nhn.github.io/tui.calendar/latest/EventObject
 
@@ -239,11 +255,12 @@ toastui:
 {{< toastui file="events.txt" file-sep="\t" defaultView="month" height="520px" >}}
 ```
 
-## Output and Format Notes
+## Limitations
 
-- Renders for standard HTML output
 - RevealJS is supported but known to be flaky
 - For other formats, the shortcode emits no output
+- Short duration events may not be displayed legibly depending on the max day duration
+- The calendar may not display legibly on very small screens
 
 ## Acknowledgements
 

@@ -22,8 +22,7 @@ toastui:
 
 ## RevealJS support
 
-The shortcode now renders in revealjs output as well as standard html output.
-Other formats remain ignored.
+Limited support for Reveal.js slides.
 
 ## Notes
 

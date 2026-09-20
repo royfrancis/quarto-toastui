@@ -5,7 +5,7 @@ project:
 website:
   title: toastui
   site-url: "https://royfrancis.github.io/quarto-toastui/"
-  description: A Quarto extension for the TOAST UI Calendar library.
+  description: "A Quarto extension for the TOAST UI Calendar library."
   navbar:
     left:
       - href: index.qmd
@@ -21,11 +21,14 @@ website:
             text: Test
             aria-label: Test
           - href: test-inline.qmd
-            text: Test Inline
-            aria-label: Test Inline
+            text: "Test Inline"
+            aria-label: "Test Inline"
           - href: test-yaml.qmd
-            text: Test YAML
-            aria-label: Test YAML
+            text: "Test YAML"
+            aria-label: "Test YAML"
+          - href: revealjs.qmd
+            text: RevealJS
+            aria-label: "RevealJS presentation"
       - href: playground.qmd
         text: Playground
         aria-label: Playground

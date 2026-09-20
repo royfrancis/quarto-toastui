@@ -1,38 +1,69 @@
 ---
 title: Usage
+number-sections: true
 format: html
 toastui:
   minimal:
+    date: "2026-04-01"
+    events:
+    - title: "Big event"
+      start: "2026-04-01T10:00:00"
+      end: "2026-04-01T16:00:00"
+
+  month-view:
     defaultView: month
     date: "2026-04-01"
     events:
-      - title: "Team Offsite"
-        category: time
-        start: "2026-04-09T10:00:00"
-        end: "2026-04-09T16:00:00"
+      - title: "Big event"
+        start: "2026-04-01T10:00:00"
+        end: "2026-04-01T16:00:00"
 
   day-view:
     defaultView: day
     date: "2026-04-15"
     events:
       - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Lunch"
+        start: "2026-04-15T12:00:00"
+        end: "2026-04-15T13:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
+
+  categories-and-duration:
+    defaultView: week
+    date: "2026-04-15"
+    week:
+      hourStart: 9
+      hourEnd: 17
+    events:
+      - title: "Standup"
         category: time
         start: "2026-04-15T09:00:00"
         end: "2026-04-15T09:30:00"
       - title: "Deep Work"
-        category: time
+        category: task
         start: "2026-04-15T10:00:00"
         end: "2026-04-15T12:00:00"
       - title: "Lunch"
-        category: time
         start: "2026-04-15T12:00:00"
         end: "2026-04-15T13:00:00"
       - title: "Code Review"
-        category: time
+        category: "milestone"
         start: "2026-04-15T14:00:00"
         end: "2026-04-15T15:30:00"
+      - title: "Picnic"
+        category: "allday"
+        start: "2026-04-16"
+        end: "2026-04-16"
+        isAllday: true
 
-  week-view:
+  calendars:
     defaultView: week
     date: "2026-04-09"
     events:
@@ -83,6 +114,12 @@ toastui:
     defaultView: week
     date: "2026-04-14"
     useDetailPopup: true
+    eventDetailItems:
+      - location
+      - attendees
+    popupDetailItems:
+      - location
+      - attendees
     timeFormat: "24h"
     calendars:
       - id: cal1
@@ -158,6 +195,11 @@ toastui:
     timezone:
       zones:
         - timezoneName: Europe/Stockholm
+    eventDetailItems:
+      - attendees
+    popupDetailItems:
+      - attendees
+      - calendar
     calendars:
       - id: "session"
         name: "Session"
@@ -177,27 +219,40 @@ toastui:
         backgroundColor: "#E8DAEF"
         dragBackgroundColor: "#E8DAEF"
         borderColor: "#BB8FCE"
+  limitations:
+    date: "2026-04-01"
+    events:
+    - title: "30 min event"
+      start: "2026-04-01T10:00:00"
+      end: "2026-04-01T10:30:00"
+    - title: "15 min event"
+      start: "2026-04-01T11:00:00"
+      end: "2026-04-01T11:15:00"
+    - title: "10 min event"
+      start: "2026-04-01T12:00:00"
+      end: "2026-04-01T12:10:00"
+    - title: "5 min event"
+      start: "2026-04-01T13:00:00"
+      end: "2026-04-01T13:05:00"
 ---
 
 The examples below are ordered from simplest to most advanced. Each one introduces new features on top of the previous examples.
 
-## 1. Minimal calendar
+## Minimal calendar
 
-The simplest possible calendar: a single event in **month** view. Events are defined directly in the YAML front matter under a named key (here `minimal`), and then rendered with the `toastui` shortcode referencing that key.
+The simplest possible calendar. Events are defined directly in the YAML front matter under a named key (here `minimal`), and then rendered with the `toastui` shortcode referencing that key. The default view is week view.
 
-Every event needs at least three fields: `title`, `start`, and `end`.
+Every event needs at least three fields: `title`, `start`, and `end`. date time must be specified in this format: `YYYY-MM-DDTHH:MM:SS`. The calendar defaults to **today's date** rather than the event date. And this would look like a blank calendar even though the event is present in the calendar. Therefore, it is recommended to always provide a `date` field.
 
 ```yaml
 ---
 toastui:
   minimal:
-    defaultView: month
     date: "2026-04-01"
     events:
-      - title: "Team Offsite"
-        category: time
-        start: "2026-04-09T10:00:00"
-        end: "2026-04-09T16:00:00"
+      - title: "Big event"
+        start: "2026-04-01T10:00:00"
+        end: "2026-04-01T16:00:00"
 ---
 ```
 
@@ -207,7 +262,30 @@ toastui:
 
 {{< toastui minimal >}}
 
-## 2. Day view
+## Month view
+
+The user can change to different views such as **month**, **day**, or **week** views, but you can initially set the default view using the `defaultView` field in the calendar configuration. Here is a single event in **month** view. The user can be disallowed from changing the view if `navigation` is set to `false`.
+
+```yaml
+---
+toastui:
+  month-view:
+    defaultView: month
+    date: "2026-04-01"
+    events:
+      - title: "Big event"
+        start: "2026-04-01T10:00:00"
+        end: "2026-04-01T16:00:00"
+---
+```
+
+```markdown
+{{{< toastui month-view >}}}
+```
+
+{{< toastui month-view >}}
+
+## Day view
 
 Switch to a **day** view to see a detailed hour-by-hour timeline. This is useful when you want to focus on a single day's agenda. Set `defaultView: day` and set `date` to the target day.
 
@@ -218,11 +296,17 @@ toastui:
     date: "2026-04-15"
     events:
       - title: "Standup"
-        category: time
         start: "2026-04-15T09:00:00"
         end: "2026-04-15T09:30:00"
       - title: "Deep Work"
-        ...
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Lunch"
+        start: "2026-04-15T12:00:00"
+        end: "2026-04-15T13:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
 ```
 
 ```markdown
@@ -231,35 +315,64 @@ toastui:
 
 {{< toastui day-view >}}
 
-## 3. Week view with calendars
+## Categories and Duration
 
-The **week** view spans seven days and is the default view if none is specified. This example also introduces **calendars** — named colour groups that let you visually distinguish event categories. Each event references a calendar via `calendarId`.
+In week and day views, we can see different categories of events, namely **Milestone**, **Task** and **All Day** events. This is defined using the `category` field in the event data. We have updated the YAML metadata to include different event categories. We can also limit the displayed daily durations for each day by specifying `hourStart` and `hourEnd`.
 
 ```yaml
 toastui:
-  week-view:
-    defaultView: week
-    date: "2026-04-09"
+  categories-and-duration:
+    defaultView: day
+    date: "2026-04-15"
+    week:
+      hourStart: 9
+      hourEnd: 17
     events:
-      - title: "Morning Run"
-        calendarId: cal1
-        ...
-    calendars:
-      - id: cal1
-        name: Personal
-        backgroundColor: "#03bd9e"
-      - id: cal2
-        name: Work
-        backgroundColor: "#00a9ff"
+      - title: "Standup"
+        category: time
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        category: task
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Lunch"
+        start: "2026-04-15T12:00:00"
+        end: "2026-04-15T13:00:00"
+      - title: "Code Review"
+        category: "milestone"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
+      - title: "Picnic"
+        category: "allday"
+        start: "2026-04-16"
+        end: "2026-04-16"
+        isAllday: true
 ```
 
 ```markdown
-{{{< toastui week-view >}}}
+{{{< toastui categories-and-duration >}}}
 ```
 
-{{< toastui week-view >}}
+{{< toastui categories-and-duration >}}
 
-## 4. All-day and multi-day events
+The display of categories **Task** and **Milestone** can be controlled using `taskView` by setting it as `true`, `false`, `milestone` or `task`.
+
+```yaml
+toastui:
+  categories-and-duration:
+    week:
+      taskView: false
+```
+
+```yaml
+toastui:
+  categories-and-duration:
+    week:
+      taskView: 'milestone'
+```
+
+## All-day and multi-day events
 
 Events can span entire days or stretch across multiple days. Set `category: allday` and `isAllday: true` for all-day events. They are rendered in a banner at the top of the calendar. Regular timed events appear alongside them in the time grid.
 
@@ -288,24 +401,90 @@ events:
 
 {{< toastui allday >}}
 
-## 5. Detail popup
+## Calendars
 
-Enable `useDetailPopup: true` to let users click on an event and see a popup with extra information such as `location`, `attendees`, and `state`. The popup only shows these sections when the event explicitly defines them — if a property is not set, its row is hidden. Set `timeFormat` to `"12h"` or `"24h"` to use one format for rendered timed event labels, the time-grid axis, the current-time indicator, and this popup. The default is `"24h"`. The separate event form popup time picker remains in TOAST UI's built-in 24-hour format.
+This example introduces **calendars** — named colour groups that let you visually distinguish event categories. Each event references a calendar via `calendarId`.
 
 ```yaml
 toastui:
+  calendars:
+    defaultView: week
+    date: "2026-04-09"
+    events:
+      - title: "Morning Run"
+        calendarId: cal1
+        category: time
+        start: "2026-04-09T06:00:00"
+        end: "2026-04-09T07:00:00"
+      - title: "Team Standup"
+        calendarId: cal2
+        category: time
+        start: "2026-04-09T09:00:00"
+        end: "2026-04-09T09:30:00"
+      - title: "Design Review"
+        calendarId: cal2
+        category: time
+        start: "2026-04-10T14:00:00"
+        end: "2026-04-10T15:30:00"
+    calendars:
+      - id: cal1
+        name: Personal
+        backgroundColor: "#03bd9e"
+      - id: cal2
+        name: Work
+        backgroundColor: "#00a9ff"
+```
+
+```markdown
+{{{< toastui calendars >}}}
+```
+
+{{< toastui calendars >}}
+
+## Event and popup details
+
+Use `eventDetailItems` to add optional details inside timed events. Enable `useDetailPopup: true` and use `popupDetailItems` to select optional popup rows independently. Both accept any field in the event data, including custom columns from delimited files. Known TOAST UI fields such as `location` and `attendees` use their native icons; custom fields render as `field: value`. Both options default to no optional details and only show selected fields that exist in the event data. Popup title and date are always visible. Set `timeFormat` to `"12h"` or `"24h"` to use one format for rendered timed event labels, the time-grid axis, the current-time indicator, and this popup. The default is `"24h"`. The separate event form popup time picker remains in TOAST UI's built-in 24-hour format.
+
+```yaml
+toastui:
+
   popup:
     defaultView: week
     date: "2026-04-14"
     useDetailPopup: true
+    eventDetailItems:
+      - location
+      - attendees
+      - project
+    popupDetailItems:
+      - location
+      - attendees
+      - project
     timeFormat: "24h"
+    calendars:
+      - id: cal1
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#00a9ff"
+        dragBackgroundColor: "#00a9ff"
+        borderColor: "#00a9ff"
     events:
       - title: "Design Review"
+        calendarId: cal1
+        category: time
         start: "2026-04-14T09:00:00"
         end: "2026-04-14T11:30:00"
         location: "Room A"
         attendees: "Alice"
-      ...
+        project: "Apollo"
+      - title: "Sprint Retro"
+        calendarId: cal1
+        category: time
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:00:00"
+        location: "Main Hall"
+        attendees: "Bob"
+        project: "Gemini"
 ```
 
 ```markdown
@@ -314,9 +493,18 @@ toastui:
 
 {{< toastui popup >}}
 
-## 6. Events from a TSV file
+## Events from a TSV file
 
-Instead of listing events in YAML, point `file` to a **tab-separated** file and set `file-sep` to `"\t"`. The file must have a header row with at least the columns `title`, `start`, and `end`. Optional columns like `calendarId`, `category`, `location`, and `backgroundColor` are picked up automatically.
+Instead of listing events in YAML, point `file` to a **tab-separated** file and set `file-sep` to `"\t"`. Here is the format of the TSV file:
+
+```tsv
+id	calendarId	title	category	start	end	isAllday	location	backgroundColor
+101	cal1	TSV Demo Meeting	time	2026-04-14T09:00:00	2026-04-14T10:00:00	false	Room North	#03bd9e
+102	cal2	TSV Sprint Review	time	2026-04-15T13:00:00	2026-04-15T14:00:00	false	Studio B	#00a9ff
+103	cal1	TSV Planning Day	allday	2026-04-16	2026-04-16	true	HQ	#03bd9e
+```
+
+The file must have a header row with at least the columns `title`, `start`, and `end`. Optional columns like `calendarId`, `category`, `location`, and `backgroundColor` are picked up automatically.
 
 ```yaml
 toastui:
@@ -334,9 +522,18 @@ toastui:
 
 {{< toastui tsv-events >}}
 
-## 7. Events from a CSV file
+## Events from a CSV file
 
-Comma-delimited files work the same way — just change `file-sep` to `","`. This example also uses the **week** view so you can see the timed events on the grid.
+Comma-delimited files work the same way — just change `file-sep` to `","`. Here is a preview of the CSV file format:
+
+```csv
+id,calendarId,title,category,start,end,isAllday,location,backgroundColor
+201,cal1,CSV Demo Meeting,time,2026-04-17T09:30:00,2026-04-17T10:15:00,false,Room East,#03bd9e
+202,cal2,CSV Design Sync,time,2026-04-18T14:00:00,2026-04-18T15:00:00,false,Online,#00a9ff
+203,cal2,CSV Release Day,allday,2026-04-19,2026-04-19,true,Remote,#00a9ff
+```
+
+This example also uses the **week** view so you can see the timed events on the grid.
 
 ```yaml
 toastui:
@@ -353,7 +550,7 @@ toastui:
 
 {{< toastui csv-events >}}
 
-## 8. Fully inline shortcode
+## Fully inline shortcode
 
 You can skip YAML metadata entirely and pass **all** options directly in the shortcode. This style is handy for quick one-off calendars or prototypes. Note that inline arguments cannot express complex nested structures like `calendars` or `week` options.
 
@@ -363,7 +560,7 @@ You can skip YAML metadata entirely and pass **all** options directly in the sho
 
 {{< toastui file="data/events.tsv" file-sep="\t" defaultView="day" date="2026-04-15" >}}
 
-## 9. Inline override of metadata
+## Inline override of metadata
 
 You can **combine** YAML metadata with inline arguments. The metadata key provides the base configuration, and any inline arguments override individual values. Here the `week-view` config is reused but switched to month view with a different date and height.
 
@@ -373,7 +570,7 @@ You can **combine** YAML metadata with inline arguments. The metadata key provid
 
 {{< toastui week-view defaultView="month" date="2026-04-01" height="500px" >}}
 
-## 10. Full-featured schedule
+## Full-featured schedule
 
 This example puts it all together: events loaded from a CSV file, custom calendar colours for different event types, detail popups, timezone configuration, a workweek-only week view with custom hour range, and an enlarged time grid. This pattern is well suited for multi-day workshops and conference programmes. `height` and `timegridHeight` are manually set to remove scroll bar.
 
@@ -397,6 +594,11 @@ toastui:
     timezone:
       zones:
         - timezoneName: Europe/Stockholm
+    eventDetailItems:
+      - attendees
+    popupDetailItems:
+      - attendees
+      - calendar
     calendars:
       - id: "session"
         name: "Session"
@@ -417,3 +619,37 @@ toastui:
 ```
 
 {{< toastui schedule >}}
+
+## Limitations
+
+- RevealJS is supported but known to be flaky
+- For other formats, the shortcode emits no output
+- Short duration events may not be displayed legibly depending on the max day duration
+- The calendar may not display legibly on very small screens
+
+```yaml
+---
+toastui:
+  limitations:
+    date: "2026-04-01"
+    events:
+    - title: "30 min event"
+      start: "2026-04-01T10:00:00"
+      end: "2026-04-01T10:30:00"
+    - title: "15 min event"
+      start: "2026-04-01T11:00:00"
+      end: "2026-04-01T11:15:00"
+    - title: "10 min event"
+      start: "2026-04-01T12:00:00"
+      end: "2026-04-01T12:10:00"
+    - title: "5 min event"
+      start: "2026-04-01T13:00:00"
+      end: "2026-04-01T13:05:00"
+---
+```
+
+```markdown
+{{{< toastui limitations >}}}
+```
+
+{{< toastui limitations >}}

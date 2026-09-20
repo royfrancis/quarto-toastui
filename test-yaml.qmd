@@ -179,6 +179,87 @@ toastui:
         start: "2026-04-14"
         end: "2026-04-16"
 
+  # eventDetailItems (YAML list)
+  test-event-details-selected:
+    useDetailPopup: true
+    eventDetailItems:
+      - location
+      - attendees
+      - project
+    popupDetailItems:
+      - state
+      - body
+      - project
+    date: "2026-04-14"
+    calendars:
+      - id: details
+        name: Detail calendar
+        backgroundColor: "#03bd9e"
+    events:
+      - id: details-selected
+        title: "Selected detail rows"
+        calendarId: details
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+        location: "Room Y"
+        recurrenceRule: "Weekly"
+        attendees:
+          - Alice
+          - Bob
+        state: "Free"
+        body: "Bring notes"
+        project: "Apollo"
+
+  # eventDetailItems (second instance)
+  test-event-details-body:
+    useDetailPopup: true
+    eventDetailItems:
+      - body
+    popupDetailItems:
+      - location
+    date: "2026-04-14"
+    calendars:
+      - id: details
+        name: Detail calendar
+        backgroundColor: "#00a9ff"
+    events:
+      - id: details-body
+        title: "Body detail row"
+        calendarId: details
+        start: "2026-04-14T11:00:00"
+        end: "2026-04-14T12:00:00"
+        location: "Room Z"
+        state: "Busy"
+        body: "Body only"
+
+  # eventDetailItems (invalid non-string item)
+  test-event-details-invalid:
+    useDetailPopup: true
+    eventDetailItems:
+      - 1
+
+  # popupDetailItems (invalid non-string item)
+  test-popup-details-invalid:
+    useDetailPopup: true
+    popupDetailItems:
+      - 1
+
+  # long-labels
+  test-long-labels:
+    defaultView: month
+    date: "2026-04-16"
+    file: data/events-long-labels.csv
+    file-sep: ","
+    useDetailPopup: true
+    popupDetailItems:
+      - location
+      - attendees
+      - body
+    eventDetailItems:
+      - location
+      - attendees
+      - body
+
   # isReadOnly: true
   test-readonly-true:
     isReadOnly: true
@@ -629,13 +710,39 @@ Click an empty time slot to see the create form popup (isReadOnly is false).
 
 {{< toastui test-useformpopup >}}
 
-### useDetailPopup: true
+### Detail items omitted
 
-Timed event labels and the time-grid axis should use 24-hour time. Click an event
-and confirm its detail popup matches. The fixture covers same-day, cross-day,
-and all-day ranges.
+Timed events should show only time and title, and the time-grid axis should use
+24-hour time. Click an event and confirm its popup shows only title and date. The
+fixture preserves same-day, cross-day, all-day, and outside-click dismissal checks.
 
 {{< toastui test-usedetailpopup >}}
+
+### eventDetailItems and popupDetailItems: YAML lists
+
+The event below should show location, attendees, and the arbitrary `project`
+field inside the event card, even though every optional field is present. Click
+it and confirm that its popup shows only state, body, and `project`.
+
+{{< toastui test-event-details-selected >}}
+
+This second calendar shows only body inside the event and only location in its
+popup. Neither selection should affect the first calendar.
+
+{{< toastui test-event-details-body >}}
+
+### Invalid detail items
+
+Both options accept arbitrary field names but require each item to be a string,
+so these numeric items should produce styled error blocks.
+
+{{< toastui test-event-details-invalid >}}
+
+{{< toastui test-popup-details-invalid >}}
+
+### Long labels
+
+{{< toastui test-long-labels >}}
 
 ### isReadOnly: true
 

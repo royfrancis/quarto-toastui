@@ -89,6 +89,20 @@ Tests setting the initial calendar date.
 
 {{< toastui file="data/events.csv" file-sep="," date="2026-04-17" >}}
 
+## Detail items (scalar)
+
+Confirm that location appears inside each event, then click one and confirm that
+location is the only optional popup row.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" useDetailPopup="true" eventDetailItems="location" popupDetailItems="location" >}}
+
+## Detail items (JSON arrays)
+
+Confirm that location and calendar appear inside events, then click one and
+confirm that only calendar appears in the popup.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" useDetailPopup="true" eventDetailItems='["location","calendar"]' popupDetailItems='["calendar"]' calendars='[{"id":"cal1","name":"Personal","backgroundColor":"#03bd9e"},{"id":"cal2","name":"Work","backgroundColor":"#00a9ff"}]' >}}
+
 ## `timeFormat` (default 24-hour)
 
 Without a `timeFormat` parameter, confirm that timed events and the time-grid

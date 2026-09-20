@@ -15,6 +15,8 @@ resources:
 <link rel="stylesheet" href="_extensions/toastui/assets/toastui-calendar.min.css">
 <link rel="stylesheet" href="_extensions/toastui/toastui.css">
 <script src="_extensions/toastui/assets/toastui-calendar.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htl@0.3.1/dist/htl.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@observablehq/inputs@0.12/dist/inputs.min.js"></script>
 
 <style>
 .playground-grid {
@@ -148,13 +150,33 @@ resources:
 ### Controls
 
 ```{ojs}
-import {Inputs} from "npm:@observablehq/inputs"
+Inputs = window.Inputs
+```
+
+```{ojs}
+nativeDetailItemNames = [
+  "location",
+  "recurrenceRule",
+  "attendees",
+  "state",
+  "calendar",
+  "body"
+]
+```
+
+```{ojs}
+detailItemOptions = [
+  ...nativeDetailItemNames,
+  ...Array.from(new Set(eventList.flatMap((event) => Object.keys(event))))
+    .filter((item) => !nativeDetailItemNames.includes(item))
+]
 ```
 
 ```{ojs}
 viewof filePath = Inputs.select([
   "data/events.tsv",
   "data/events.csv",
+  "data/events-long-labels.csv",
   "data/schedule.csv",
   "data/workshop-week.tsv",
   "data/bad-empty.tsv",
@@ -169,7 +191,7 @@ viewof filePath = Inputs.select([
 
 viewof fileSepRaw = Inputs.select(["\\t", ",", ";"], {
   label: "file-sep",
-  value: "\\t"
+  value: filePath.toLowerCase().endsWith(".csv") ? "," : "\\t"
 })
 
 viewof initialDate = Inputs.text({
@@ -197,6 +219,18 @@ viewof isReadOnly = Inputs.toggle({
 viewof useDetailPopup = Inputs.toggle({
   label: "useDetailPopup",
   value: false
+})
+```
+
+```{ojs}
+viewof eventDetailItems = Inputs.checkbox(detailItemOptions, {
+  label: "eventDetailItems",
+  value: []
+})
+
+viewof popupDetailItems = Inputs.checkbox(detailItemOptions, {
+  label: "popupDetailItems",
+  value: []
 })
 ```
 
@@ -328,6 +362,81 @@ splitNames = (txt, fallback) => {
 ```
 
 ```{ojs}
+escapeHtml = (value) => {
+  const replacements = {"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"}
+  return String(value == null ? "" : value).replace(/[&<>"']/g, (character) => replacements[character])
+}
+```
+
+```{ojs}
+detailItemIcons = ({
+  location: "toastui-calendar-ic-location-b",
+  recurrenceRule: "toastui-calendar-ic-repeat-b",
+  attendees: "toastui-calendar-ic-user-b",
+  state: "toastui-calendar-ic-state-b",
+  calendar: "toastui-calendar-calendar-dot"
+})
+```
+
+```{ojs}
+nativeDetailItems = new Set(nativeDetailItemNames)
+```
+
+```{ojs}
+eventDetailValue = (event, item, calendars) => {
+  if (item === "calendar") {
+    const calendar = calendars.find((candidate) => candidate.id === event.calendarId)
+    return calendar ? calendar.name || "" : ""
+  }
+  let value = event[item]
+  if (value == null && event.raw) value = event.raw[item]
+  if (Array.isArray(value)) return value.join(", ")
+  return value == null ? "" : value
+}
+```
+
+```{ojs}
+renderEventDetails = (event, items, calendars) => {
+  const details = items.map((item) => {
+    const value = eventDetailValue(event, item, calendars)
+    if (value === "") return ""
+    const iconClass = Object.prototype.hasOwnProperty.call(detailItemIcons, item) ? detailItemIcons[item] : ""
+    const iconStyle = item === "calendar" && event.backgroundColor ? ` style="background-color:${escapeHtml(event.backgroundColor)}"` : ""
+    const icon = iconClass ? `<span class="toastui-calendar-icon toastui-calendar-event-detail-icon ${iconClass}"${iconStyle}></span>` : ""
+    const label = nativeDetailItems.has(item) ? "" : `<strong>${escapeHtml(item)}:</strong> `
+    return `<span class="toastui-calendar-event-detail-item">${icon}${label}${escapeHtml(value)}</span>`
+  }).join("")
+  return details ? `<span class="toastui-calendar-event-detail-items">${details}</span>` : ""
+}
+```
+
+```{ojs}
+renderCustomPopupDetails = (container, event, items, calendars) => {
+  const customItems = items.filter((item) => !nativeDetailItems.has(item))
+  if (!customItems.length) return true
+
+  const section = container.querySelector(".toastui-calendar-section-detail")
+  if (!section) return false
+  section.querySelectorAll(".toastui-calendar-custom-detail-item").forEach((element) => element.remove())
+  customItems.forEach((item) => {
+    const value = eventDetailValue(event, item, calendars)
+    if (value === "") return
+    const row = document.createElement("div")
+    row.className = "toastui-calendar-detail-item toastui-calendar-custom-detail-item"
+    const label = document.createElement("strong")
+    label.textContent = item + ": "
+    row.append(label, document.createTextNode(String(value)))
+    section.append(row)
+  })
+  return true
+}
+```
+
+```{ojs}
+formatEventTime = (value) => `${String(value.getHours()).padStart(2, "0")}:${String(value.getMinutes()).padStart(2, "0")}`
+```
+
+```{ojs}
 parseDelimited = (text, sep) => {
   const lines = (text || "").split(/\r?\n/).filter((line) => line.trim() !== "")
   if (lines.length < 2) return []
@@ -396,6 +505,17 @@ eventError = fileResult.error
 ```
 
 ```{ojs}
+calendarDefinitions = [{
+  id: "cal1",
+  name: "Main Calendar",
+  color: "#ffffff",
+  backgroundColor: "#2c9f8f",
+  dragBackgroundColor: "#2c9f8f",
+  borderColor: "#206d62"
+}]
+```
+
+```{ojs}
 calendarConfig = ({
   defaultView: defaultView,
   isReadOnly: isReadOnly,
@@ -428,14 +548,14 @@ calendarConfig = ({
       displayLabel: "Stockholm"
     }]
   },
-  calendars: [{
-    id: "cal1",
-    name: "Main Calendar",
-    color: "#ffffff",
-    backgroundColor: "#2c9f8f",
-    dragBackgroundColor: "#2c9f8f",
-    borderColor: "#206d62"
-  }]
+  calendars: calendarDefinitions,
+  template: {
+    time: (event) => {
+      const title = escapeHtml(event.title)
+      const titleAndTime = event.start ? `<strong>${formatEventTime(event.start)}</strong>&nbsp;${title}` : title
+      return titleAndTime + renderEventDetails(event, eventDetailItems, calendarDefinitions)
+    }
+  }
 })
 ```
 
@@ -471,14 +591,17 @@ calendar = {
       return indent + key + ": " + toYAML(val, level + 1)
     }).join("\n")
   }
+  const {template, ...previewCalendarConfig} = calendarConfig
   const payload = {
     toastui: {
-      calendar: calendarConfig,
+      calendar: previewCalendarConfig,
       extension: {
         height: heightPx + "px",
         file: filePath,
         "file-sep": fileSepRaw,
-        date: initialDate
+        date: initialDate,
+        eventDetailItems: eventDetailItems,
+        popupDetailItems: popupDetailItems
       },
       runtime: {
         eventsLoaded: eventList.length,
@@ -490,13 +613,48 @@ calendar = {
   if (!window.tui || !window.tui.Calendar) return null
   if (!mount) return null
   mount.style.height = heightPx + "px"
+  const popupDetailClasses = {
+    location: "toastui-calendar-detail-exclude-location",
+    recurrenceRule: "toastui-calendar-detail-exclude-recurrence-rule",
+    attendees: "toastui-calendar-detail-exclude-attendees",
+    state: "toastui-calendar-detail-exclude-state",
+    calendar: "toastui-calendar-detail-exclude-calendar",
+    body: "toastui-calendar-detail-exclude-body"
+  }
+  mount.classList.toggle("toastui-calendar-detail-popup-enabled", useDetailPopup)
+  Object.entries(popupDetailClasses).forEach(([item, className]) => {
+    mount.classList.toggle(className, useDetailPopup && !popupDetailItems.includes(item))
+  })
+  const hasCustomPopupDetails = popupDetailItems.some((item) => !nativeDetailItems.has(item))
+  mount.classList.toggle("toastui-calendar-detail-has-custom", useDetailPopup && hasCustomPopupDetails)
   if (window.__playgroundCal && typeof window.__playgroundCal.destroy === "function") {
     window.__playgroundCal.destroy()
   }
   mount.innerHTML = ""
   const cal = new window.tui.Calendar(mount, calendarConfig)
   window.__playgroundCal = cal
-  if (eventList.length) cal.createEvents(eventList)
+  if (useDetailPopup && hasCustomPopupDetails) {
+    cal.on("clickEvent", (info) => {
+      const observer = new MutationObserver(() => {
+        if (renderCustomPopupDetails(mount, info.event, popupDetailItems, calendarDefinitions)) observer.disconnect()
+      })
+      observer.observe(mount, {childList: true, subtree: true})
+      window.setTimeout(() => {
+        renderCustomPopupDetails(mount, info.event, popupDetailItems, calendarDefinitions)
+        observer.disconnect()
+      }, 100)
+    })
+  }
+  const normalizedEvents = eventList.map((event, index) => {
+    const normalized = {...event}
+    if (normalized.id == null || normalized.id === "") normalized.id = `playground-event-${index}`
+    normalized.raw = {...normalized, ...(normalized.raw && typeof normalized.raw === "object" ? normalized.raw : {})}
+    if (!normalized.state) normalized.state = ""
+    if (normalized.attendees != null && !Array.isArray(normalized.attendees)) normalized.attendees = [String(normalized.attendees)]
+    if (!normalized.attendees || (Array.isArray(normalized.attendees) && normalized.attendees.length === 0)) normalized.attendees = null
+    return normalized
+  })
+  if (normalizedEvents.length) cal.createEvents(normalizedEvents)
   if (initialDate) cal.setDate(new Date(initialDate))
   invalidation.then(() => { cal.destroy(); window.__playgroundCal = null })
   return cal

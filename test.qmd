@@ -92,6 +92,142 @@ toastui:
         name: Work
         backgroundColor: "#00a9ff"
 
+  options-icon-test:
+    defaultView: week
+    height: 680px
+    navigation: true
+    date: "2026-04-15"
+    isReadOnly: false
+    useFormPopup: true
+    useDetailPopup: true
+    timeFormat: "24h"
+    eventDetailItems:
+      - location
+      - recurrenceRule
+      - attendees
+      - state
+    popupDetailItems:
+      - location
+      - recurrenceRule
+      - attendees
+      - state
+      - calendar
+      - body
+    gridSelection:
+      enableClick: true
+      enableDblClick: true
+    week:
+      startDayOfWeek: 1
+      hourStart: 8
+      hourEnd: 18
+      eventView: true
+      taskView:
+        - milestone
+        - task
+      showTimezoneCollapseButton: true
+      timezonesCollapsed: false
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+          displayLabel: Stockholm
+        - timezoneName: Europe/London
+          displayLabel: London
+    calendars:
+      - id: icon-work
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#087f8c"
+        dragBackgroundColor: "#087f8c"
+        borderColor: "#087f8c"
+      - id: icon-personal
+        name: Personal
+        color: "#ffffff"
+        backgroundColor: "#c44d58"
+        dragBackgroundColor: "#c44d58"
+        borderColor: "#c44d58"
+    events:
+      - id: icon-milestone
+        calendarId: icon-work
+        title: "Release milestone"
+        category: milestone
+        start: "2026-04-13"
+        end: "2026-04-13"
+      - id: icon-task
+        calendarId: icon-work
+        title: "Prepare release notes"
+        category: task
+        start: "2026-04-14"
+        end: "2026-04-14"
+      - id: icon-allday
+        calendarId: icon-personal
+        title: "Conference day"
+        category: allday
+        isAllday: true
+        start: "2026-04-15"
+        end: "2026-04-15"
+      - id: icon-private
+        calendarId: icon-work
+        title: "Private planning"
+        category: time
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:30:00"
+        location: "Board room"
+        recurrenceRule: "Weekly"
+        attendees:
+          - Alex
+          - Morgan
+        state: "Busy"
+        body: "Review the confidential launch plan."
+        isPrivate: true
+      - id: icon-public
+        calendarId: icon-personal
+        title: "Open design review"
+        category: time
+        start: "2026-04-16T11:00:00"
+        end: "2026-04-16T12:30:00"
+        location: "Studio A"
+        recurrenceRule: "Every other Thursday"
+        attendees:
+          - Casey
+          - Taylor
+        state: "Free"
+        body: "Bring the current design proposal."
+        isPrivate: false
+
+  long-labels:
+    defaultView: week
+    date: "2026-04-17"
+    file: "data/events-long-labels.csv"
+    file-sep: ","
+    useDetailPopup: true
+    eventDetailItems:
+      - location
+      - attendees
+      - state
+      - arbitrary
+      - body
+    popupDetailItems:
+      - location
+      - attendees
+      - state
+      - arbitrary
+      - body
+    week:
+      eventView: true
+      taskView: false
+    calendars:
+      - id: cal1
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#087f8c"
+        dragBackgroundColor: "#087f8c"
+        borderColor: "#087f8c"
+      - id: cal2
+        name: Personal
+        color: "#ffffff"
+        backgroundColor: "#c44d58"
+        dragBackgroundColor: "#c44d58"
+        borderColor: "#c44d58"
 ---
 
 ## YAML metadata
@@ -246,6 +382,90 @@ toastui:
 </details>
 
 {{< toastui options-week-time-only-no-buttons >}}
+
+### Icon coverage schedule
+
+- Milestone, task, all-day, private, and public events exercise the event icons
+- Click a timed event to inspect all detail-popup icons
+
+{{< toastui options-icon-test >}}
+
+<div class="toastui-icon-test-grid" aria-label="TOAST UI icon coverage">
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-title" aria-hidden="true"></span></span>Title</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-location" aria-hidden="true"></span></span>Location</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-date" aria-hidden="true"></span></span>Date</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-state" aria-hidden="true"></span></span>State</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-private" aria-hidden="true"></span></span>Private</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-public" aria-hidden="true"></span></span>Public</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-close" aria-hidden="true"></span></span>Close</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-user-b" aria-hidden="true"></span></span>Attendees</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-edit" aria-hidden="true"></span></span>Edit</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-delete" aria-hidden="true"></span></span>Delete</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-arrow-solid-top" aria-hidden="true"></span></span>Arrow up</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-milestone" aria-hidden="true"></span></span>Milestone</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-arrow-left" aria-hidden="true"></span></span>Arrow left</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-arrow-right" aria-hidden="true"></span></span>Arrow right</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol toastui-icon-test-symbol-dark"><span class="toastui-calendar-icon toastui-calendar-ic-handle-y" aria-hidden="true"></span></span>Vertical handle</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-checkbox-normal" aria-hidden="true"></span></span>Unchecked</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-checkbox-checked" aria-hidden="true"></span></span>Checked</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-dropdown-arrow" aria-hidden="true"></span></span>Dropdown</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-open toastui-calendar-ic-dropdown-arrow" aria-hidden="true"></span></span>Dropdown open</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-location-b" aria-hidden="true"></span></span>Detail location</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-state-b" aria-hidden="true"></span></span>Detail state</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol"><span class="toastui-calendar-icon toastui-calendar-ic-repeat-b" aria-hidden="true"></span></span>Recurrence</span>
+  <span class="toastui-icon-test-item"><span class="toastui-icon-test-symbol toastui-icon-test-symbol-dark"><span class="toastui-calendar-resize-handler-x" aria-hidden="true"></span></span>Resize handle</span>
+</div>
+
+<style>
+.toastui-icon-test-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.5rem 1rem;
+  margin: 1rem 0 2rem;
+}
+
+.toastui-icon-test-grid > p {
+  display: contents;
+}
+
+.toastui-icon-test-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.toastui-icon-test-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.toastui-icon-test-symbol-dark {
+  background: #555;
+}
+
+.toastui-icon-test-grid [class*="toastui-calendar-ic-"] {
+  background-position: center;
+}
+
+.toastui-icon-test-grid .toastui-calendar-resize-handler-x {
+  position: static;
+  display: inline-block;
+  width: 8px;
+  height: 4px;
+  padding: 0;
+}
+</style>
+
+### Long labels
+
+{{< toastui long-labels >}}
 
 ## Inline
 ### Basic
