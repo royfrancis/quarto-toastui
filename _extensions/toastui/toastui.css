@@ -122,16 +122,6 @@
   font-weight: 600;
 }
 
-/* hide popup buttons */
-.toastui-calendar-detail-container .toastui-calendar-section-button {
-  display: none;
-}
-
-/* decrease line height */
-.toastui-calendar-detail-container .toastui-calendar-content {
-  line-height: 1.2;
-}
-
 /* Replace bundled raster icons with resolution-independent SVGs. */
 .toastui-calendar-icon.toastui-calendar-ic-title {
   background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNCIgaGVpZ2h0PSIxNCIgdmlld0JveD0iMCAwIDE0IDE0IiBmaWxsPSJub25lIiBzdHJva2U9IiMzMzMiIHN0cm9rZS13aWR0aD0iMS4zIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0yIDNoMTBNNyAzdjlNNC41IDEyaDUiLz48L3N2Zz4=");
@@ -234,4 +224,25 @@
   background-image: none;
   -webkit-mask: var(--toastui-icon-image) no-repeat;
   mask: var(--toastui-icon-image) no-repeat;
+}
+
+/* hide popup buttons */
+.toastui-calendar-detail-container .toastui-calendar-section-button {
+  display: none;
+}
+
+/* time event content - decrease line height */
+.toastui-calendar-detail-container .toastui-calendar-content {
+  line-height: 1.2;
+}
+
+/* time event popup title - decrease line height */
+.toastui-calendar-event-title {
+  line-height: 1.2;
+  margin-bottom: 5px;
+}
+
+/* popup body text */
+.calendar-detail-item-separate {
+  margin-top: 5px;
 }
