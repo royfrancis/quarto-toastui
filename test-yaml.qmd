@@ -582,6 +582,35 @@ toastui:
         start: "2026-04-14T22:00:00"
         end: "2026-04-15T02:00:00"
 
+  # autoHourRange: measured in timezone.zones[0], not the viewer's own clock
+  test-auto-hour-range-timezone:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+    events:
+      - title: "Morning (Stockholm)"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Afternoon (Stockholm)"
+        start: "2026-04-14T14:00:00"
+        end: "2026-04-14T15:00:00"
+
+  # autoHourRange: midnight-spanning event measured in timezone.zones[0]
+  test-auto-hour-range-timezone-multiday:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+    events:
+      - title: "Overnight (Stockholm)"
+        start: "2026-04-14T22:00:00"
+        end: "2026-04-15T02:00:00"
+
   # week.eventView: boolean false
   test-week-eventview-false:
     defaultView: week
@@ -1033,6 +1062,26 @@ One event spans midnight (22:00-02:00 next day). Expect the full default
 day (00:00-24:00) rather than a clipped range.
 
 {{< toastui test-auto-hour-range-multiday >}}
+
+### autoHourRange with timezone.zones
+
+Events at 09:00 and 14:00 (ending 15:00) Stockholm time, with
+`timezone.zones[0]: Europe/Stockholm`. Expect the time grid exactly
+09:00-15:00, measured in Stockholm wall-clock time regardless of the
+viewer's own browser timezone — not clipped or shifted for viewers in other
+zones.
+
+{{< toastui test-auto-hour-range-timezone >}}
+
+### autoHourRange with timezone.zones and a multi-day event
+
+One event spans midnight in Stockholm time (22:00-02:00 next day), with
+`timezone.zones[0]: Europe/Stockholm`. Expect the full default day
+(00:00-24:00) — the "spans midnight" check must use Stockholm's calendar
+date, not the viewer's own, or this could wrongly measure as same-day for
+some viewers.
+
+{{< toastui test-auto-hour-range-timezone-multiday >}}
 
 ### week.eventView: false
 
