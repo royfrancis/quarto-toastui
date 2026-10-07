@@ -15,6 +15,7 @@ A Quarto shortcode extension for embedding TOAST UI Calendar in HTML output.
 - Customizable event and popup details
 - 12/24hr formats
 - Timezone support
+- Automatic time-grid hour-range fitting
 - Responsive layout
 - HTML format is supported
 
@@ -88,13 +89,14 @@ These are passed into the Calendar constructor if present.
 | `useDetailPopup` | `boolean` | `false` | Enables the built-in event detail popup. |
 | `isReadOnly` | `boolean` | upstream: `false`; extension default: `true` | Makes the calendar non-editable. |
 | `usageStatistics` | `boolean` | upstream: `true`; extension default: `false` | Controls TOAST UI usage statistics collection. |
-| `eventFilter` | `(event) => boolean` | `(event) => !!event.isVisible` | Upstream option. Not practically configurable through YAML because it requires a JavaScript function. |
+| `eventFilter` | `(event) => boolean` | `(event) => !!event.isVisible` | Upstream option. Not forwarded by this extension because it isn't in the allowed constructor-option list, and YAML can't express a JavaScript function anyway. Use `isVisible` on individual events, or post-init custom JS, instead. |
 | `gridSelection` | `boolean \| { enableClick?: boolean, enableDblClick?: boolean }` | `true` | Configures click and double-click date selection behavior. |
 | `timezone` | `TimezoneOptions` | `{ zones: [] }` | Configures calendar time zone handling. |
 | `theme` | `ThemeObject` | `DEFAULT_THEME` | Applies TOAST UI theme customizations. |
-| `template` | `TemplateObject` | `DEFAULT_TEMPLATE` | Provides custom render templates for events and labels. |
+| `template` | `TemplateObject` | `DEFAULT_TEMPLATE` | Provides custom render templates for events and labels. YAML can't express the real JavaScript functions TOAST UI expects here, so string values are instead treated as `${field}` interpolation templates, see [Templates](#templates). |
 | `week` | `WeekOptions` | `DEFAULT_WEEK_OPTIONS` | Weekly and daily view configuration options. |
 | `month` | `MonthOptions` | `DEFAULT_MONTH_OPTIONS` | Monthly view configuration options. |
+| `autoHourRange` | `boolean-like` | `false` | Extension-only option (not forwarded to TOAST UI). Fills in whichever of `week.hourStart`/`week.hourEnd` isn't already set explicitly, from the exact min/max timed extent of the events, with no padding. Falls back to leaving the upstream `0`/`24` full-day default when there are no timed events. See [Automatic Hour Range](#automatic-hour-range) below. |
 
 ### Week Options
 
@@ -129,6 +131,60 @@ For complete option schemas and semantics, see TOAST UI Calendar docs:
 
 - https://nhn.github.io/tui.calendar/latest/
 - https://github.com/nhn/tui.calendar
+
+### Time Zones
+
+```yaml
+timezone:
+  zones:
+    - timezoneName: Europe/Stockholm
+```
+
+Write event `start`/`end` as plain wall-clock timestamps (`2026-10-05T09:00:00`, no UTC offset) and set `timezone.zones[0].timezoneName` to the venue's IANA zone. The extension resolves each naive timestamp against that zone (DST-aware, via the browser's `Intl` API) before handing events to TOAST UI, so every viewer sees the same venue-local time regardless of their own device's timezone. A `start`/`end` that already carries an explicit offset or `Z` is left as-is. With no `timezone` configured, naive timestamps keep the upstream default: parsed as each viewer's own local clock.
+
+Only `zones[0]` is used as the source zone for this resolution. Additional entries just add extra labeled time columns for comparison (`timezoneName` required, plus optional `displayLabel`/`tooltip`), see `showTimezoneCollapseButton`/`timezonesCollapsed` above and TOAST UI's own `TimezoneConfig` docs for the full shape.
+
+The current-time indicator (`week.showNowIndicator`) isn't affected by this resolution. TOAST UI renders it from the browser's actual current moment, per configured zone, independent of event data.
+
+**Quick reference, what each combination actually displays:**
+
+| Event `start`/`end` | `timezone.zones` | Displayed event time | Current-time indicator |
+|---|---|---|---|
+| Absolute (`...T09:00:00Z`) | Defined | Same wall-clock time for every viewer | Shared/fixed, the configured zone's current time, same for every viewer |
+| Absolute (`...T09:00:00Z`) | Not defined | Correctly converted to each viewer's own local time | Per-viewer, each viewer's own real local time |
+| Naive (`...T09:00:00`) | Defined | Same wall-clock digits for every viewer (venue-fixed) | Shared/fixed, the configured zone's current time, same for every viewer |
+| Naive (`...T09:00:00`) | Not defined | Same literal digits shown to every viewer | Per-viewer, each viewer's own real local time |
+
+### Automatic Hour Range
+
+```yaml
+week:
+  hourStart: 0 # omit, or set explicitly to opt out for that side
+autoHourRange: true
+```
+
+Setting `autoHourRange: true` fills in whichever of `week.hourStart`/`week.hourEnd` you didn't set explicitly, based on the events shown:
+
+- Scans each event's `start`/`end`, ignoring all-day events.
+- Sets the range to the exact min/max timed extent of the events, with no padding.
+- A timed event that spans midnight (its `start` and `end` fall on different dates) is treated as spanning the full day, since a single hour window can't bound it.
+- If there are no timed events to measure, `hourStart`/`hourEnd` are left unset and the upstream `0`/`24` full-day default applies.
+- If you set one of `week.hourStart`/`week.hourEnd` explicitly, that value is kept and only the other side is auto-fit.
+
+This computation runs in the browser, once, when the calendar initializes (not in Lua at Quarto render time). That's intentional: when `timezone.zones` is set, event `start`/`end` values are repositioned to `zones[0]`, the configured venue timezone, not necessarily the viewer's own clock (see [Time Zones](#time-zones) below), and that repositioning itself happens client-side. A build-time-computed range would be wrong for viewers in other timezones; running the scan client-side keeps the computed range consistent with how the events actually render for that viewer.
+
+**Limitation:** `week.hourStart`/`week.hourEnd` is a single fixed window. If you configure `timezone.zones` with multiple named zones and a user-toggleable primary zone, the range is computed once at calendar init and does not refit if a viewer switches the primary zone afterward, the same is true of a manually-set `hourStart`/`hourEnd` today.
+
+### Templates
+
+```yaml
+template:
+  milestone: "Custom: ${title}"
+```
+
+Upstream `template.*` options are JavaScript functions `(model) => string`, which plain YAML cannot express. Instead, give any `template.*` entry a string, and the extension turns it into a function that substitutes `${field}` placeholders with the matching property from the model object TOAST UI passes to that template (e.g. `${title}`, `${start}`, or a nested path like `${raw.project}`); missing/`null` values resolve to an empty string, and the inserted values are HTML-escaped. This only applies to string values; `template` entries that are objects/arrays/numbers/booleans are passed through unchanged (and, per `TemplateObject`, upstream will ignore or error on those since it expects a function there too).
+
+For which template names exist and what fields their model objects expose, see TOAST UI's own `TemplateObject`/`Template` docs.
 
 ## Event Options
 
@@ -188,6 +244,8 @@ The first line is a header row. Each following row becomes an event object.
 
 - Column names become object keys
 - true and false are converted to booleans
+- `goingDuration` and `comingDuration` are converted to numbers
+- A non-empty `attendees` value is wrapped into a single-element array
 - Other values are left as strings
 
 ### Minimum event file requirements
@@ -261,6 +319,7 @@ toastui:
 - For other formats, the shortcode emits no output
 - Short duration events may not be displayed legibly depending on the max day duration
 - The calendar may not display legibly on very small screens
+- TOAST UI Calendar keeps `theme` state in a store shared across every calendar instance on the page, not per instance: setting a custom theme on one calendar can eventually change the appearance of other calendar instances on the same page too (including ones that render earlier in the document), regardless of their own `theme` setting. This extension works around it for `theme.common.backgroundColor` only (reinforced per instance via scoped CSS, so that one field stays isolated); other `theme.*` fields remain plain pass-through and are still subject to this upstream behavior. If you rely on per-instance theming beyond the background color, test with every calendar that will appear on the same page.
 
 ## Acknowledgements
 

@@ -179,6 +179,24 @@ toastui:
         start: "2026-04-14"
         end: "2026-04-16"
 
+  # timeFormat: 12h
+  test-timeformat-12h:
+    date: "2026-04-14"
+    timeFormat: "12h"
+    events:
+      - title: "Afternoon meeting"
+        start: "2026-04-14T14:00:00"
+        end: "2026-04-14T15:00:00"
+
+  # timeFormat: invalid value
+  test-timeformat-invalid:
+    date: "2026-04-14"
+    timeFormat: "invalid"
+    events:
+      - title: "Afternoon meeting"
+        start: "2026-04-14T14:00:00"
+        end: "2026-04-14T15:00:00"
+
   # eventDetailItems (YAML list)
   test-event-details-selected:
     useDetailPopup: true
@@ -254,10 +272,12 @@ toastui:
     popupDetailItems:
       - location
       - attendees
+      - arbitrary
       - body
     eventDetailItems:
       - location
       - attendees
+      - arbitrary
       - body
 
   # isReadOnly: true
@@ -322,6 +342,46 @@ toastui:
         start: "2026-04-14T09:00:00"
         end: "2026-04-14T10:00:00"
 
+  # timezone: naive timestamps resolved against zones[0], DST-aware
+  test-timezone-naive-dst:
+    defaultView: week
+    date: "2026-01-12"
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+    events:
+      - title: "Winter session (CET, UTC+1)"
+        start: "2026-01-12T09:00:00"
+        end: "2026-01-12T10:00:00"
+      - title: "Summer session (CEST, UTC+2)"
+        start: "2026-07-13T09:00:00"
+        end: "2026-07-13T10:00:00"
+
+  # timezone: values that already carry an explicit offset are left unchanged
+  test-timezone-offset-preserved:
+    defaultView: week
+    date: "2026-04-14"
+    timezone:
+      zones:
+        - timezoneName: "Europe/Stockholm"
+    events:
+      - title: "Naive, resolved to Stockholm"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Explicit +05:00, untouched"
+        start: "2026-04-14T09:00:00+05:00"
+        end: "2026-04-14T10:00:00+05:00"
+
+  # timezone: with no timezone configured, naive timestamps keep the
+  # previous (viewer-local) behavior
+  test-timezone-no-zone-fallback:
+    defaultView: week
+    date: "2026-04-14"
+    events:
+      - title: "No timezone configured"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+
   # theme
   test-theme:
     date: "2026-04-14"
@@ -344,6 +404,8 @@ toastui:
       taskView:
         - milestone
         - task
+    template:
+      milestone: "Custom: ${title}"
     events:
       - title: "Template test"
         category: "milestone"
@@ -469,6 +531,56 @@ toastui:
       - title: "Hour end 18"
         start: "2026-04-14T09:00:00"
         end: "2026-04-14T10:00:00"
+
+  # autoHourRange: fills in both sides
+  test-auto-hour-range:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    events:
+      - title: "Morning"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Afternoon"
+        start: "2026-04-14T16:00:00"
+        end: "2026-04-14T17:00:00"
+
+  # autoHourRange: explicit hourStart kept, only hourEnd auto-fit
+  test-auto-hour-range-partial:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    week:
+      hourStart: 0
+    events:
+      - title: "Morning"
+        start: "2026-04-14T09:00:00"
+        end: "2026-04-14T10:00:00"
+      - title: "Afternoon"
+        start: "2026-04-14T16:00:00"
+        end: "2026-04-14T17:00:00"
+
+  # autoHourRange: no timed events falls back to the full day
+  test-auto-hour-range-no-events:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    events:
+      - title: "All day"
+        category: "allday"
+        isAllday: true
+        start: "2026-04-14"
+        end: "2026-04-14"
+
+  # autoHourRange: multi-day timed event forces the full day
+  test-auto-hour-range-multiday:
+    defaultView: week
+    date: "2026-04-14"
+    autoHourRange: true
+    events:
+      - title: "Overnight"
+        start: "2026-04-14T22:00:00"
+        end: "2026-04-15T02:00:00"
 
   # week.eventView: boolean false
   test-week-eventview-false:
@@ -718,6 +830,20 @@ fixture preserves same-day, cross-day, all-day, and outside-click dismissal chec
 
 {{< toastui test-usedetailpopup >}}
 
+### timeFormat: 12h
+
+Time labels should render in 12-hour format (e.g. "2:00 pm") instead of the
+24-hour default.
+
+{{< toastui test-timeformat-12h >}}
+
+### timeFormat: invalid value
+
+An unsupported value should render a styled error block listing the accepted
+values.
+
+{{< toastui test-timeformat-invalid >}}
+
 ### eventDetailItems and popupDetailItems: YAML lists
 
 The event below should show location, attendees, and the arbitrary `project`
@@ -780,15 +906,49 @@ Timezone set to America/New_York.
 
 {{< toastui test-timezone >}}
 
+### timezone: naive timestamps, DST-aware
+
+Both events use the same naive `09:00`–`10:00` wall-clock time, with no
+UTC offset in the source data. Confirm both render at 09:00–10:00 in the
+grid: the January event resolves against Stockholm's CET (+01:00) offset
+and the July event against CEST (+02:00), automatically, with no
+difference in the source data between the two.
+
+{{< toastui test-timezone-naive-dst >}}
+
+### timezone: explicit offsets are preserved
+
+Confirm the first event (naive) renders at 09:00–10:00 (resolved against
+Stockholm). Confirm the second event, which already carries an explicit
+`+05:00` offset deliberately different from Stockholm's own offset, is
+**not** renormalized and renders at its own distinct time instead of also
+landing on 09:00.
+
+{{< toastui test-timezone-offset-preserved >}}
+
+### timezone: no zones configured
+
+No `timezone` key is set here. Confirm this naive event still renders
+using the previous (viewer-local-clock) behavior, unaffected by the
+`timezone.zones` normalization demonstrated above.
+
+{{< toastui test-timezone-no-zone-fallback >}}
+
 ### theme
 
-Custom background color applied via theme.
+Custom background color applied via theme. This calendar's background should
+stay light grey regardless of other calendars on this page — see README
+Limitations for why that specifically needs reinforcing. Its custom
+saturday/sunday colors are not reinforced the same way, so they may not look
+consistent depending on other `theme`-using calendars elsewhere on the page.
 
 {{< toastui test-theme >}}
 
 ### template
 
-Milestone task view with template test.
+Milestone task view with a custom `template.milestone`. Confirm the
+milestone title renders as "Custom: Template test" instead of the default
+"Template test".
 
 {{< toastui test-template >}}
 
@@ -847,6 +1007,32 @@ Time grid starts at hour 8.
 Time grid ends at hour 18.
 
 {{< toastui test-week-hourend >}}
+
+### autoHourRange
+
+Events at 09:00 and 16:00 (ending 17:00). Expect time grid exactly 09:00-17:00.
+
+{{< toastui test-auto-hour-range >}}
+
+### autoHourRange with explicit week.hourStart
+
+Same events, but `week.hourStart: 0` is set explicitly. Expect `hourStart`
+stays at 0 while `hourEnd` is still auto-fit to exactly 17:00.
+
+{{< toastui test-auto-hour-range-partial >}}
+
+### autoHourRange with no timed events
+
+Only an all-day event is present. Expect the full default day (00:00-24:00).
+
+{{< toastui test-auto-hour-range-no-events >}}
+
+### autoHourRange with a multi-day event
+
+One event spans midnight (22:00-02:00 next day). Expect the full default
+day (00:00-24:00) rather than a clipped range.
+
+{{< toastui test-auto-hour-range-multiday >}}
 
 ### week.eventView: false
 

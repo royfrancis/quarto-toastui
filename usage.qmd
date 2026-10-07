@@ -219,6 +219,7 @@ toastui:
         backgroundColor: "#E8DAEF"
         dragBackgroundColor: "#E8DAEF"
         borderColor: "#BB8FCE"
+
   limitations:
     date: "2026-04-01"
     events:
@@ -234,6 +235,21 @@ toastui:
     - title: "5 min event"
       start: "2026-04-01T13:00:00"
       end: "2026-04-01T13:05:00"
+
+  auto-hour-range:
+    defaultView: day
+    date: "2026-04-15"
+    autoHourRange: true
+    events:
+      - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
 ---
 
 The examples below are ordered from simplest to most advanced. Each one introduces new features on top of the previous examples.
@@ -371,6 +387,40 @@ toastui:
     week:
       taskView: 'milestone'
 ```
+
+## Automatic hour range
+
+Instead of picking `hourStart`/`hourEnd` by hand, set `autoHourRange: true` to
+fit the time grid to the exact min/max timed extent of the events shown, with
+no padding. Here the events run 09:00–15:30, so the grid fits to exactly that
+range.
+
+```yaml
+toastui:
+  auto-hour-range:
+    defaultView: day
+    date: "2026-04-15"
+    autoHourRange: true
+    events:
+      - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
+```
+
+```markdown
+{{{< toastui auto-hour-range >}}}
+```
+
+{{< toastui auto-hour-range >}}
+
+Setting `week.hourStart` or `week.hourEnd` explicitly alongside
+`autoHourRange: true` keeps that side fixed and only auto-fits the other.
 
 ## All-day and multi-day events
 
@@ -552,7 +602,7 @@ toastui:
 
 ## Fully inline shortcode
 
-You can skip YAML metadata entirely and pass **all** options directly in the shortcode. This style is handy for quick one-off calendars or prototypes. Note that inline arguments cannot express complex nested structures like `calendars` or `week` options.
+You can skip YAML metadata entirely and pass **all** options directly in the shortcode. This style is handy for quick one-off calendars or prototypes. Nested structures like `calendars` or `week` options can also be passed inline as a JSON string (see the `timezone` example under [Inline parameter tests](test-inline.qmd)), but this gets unwieldy fast — YAML metadata is more readable for anything beyond a couple of flat options.
 
 ```markdown
 {{{< toastui file="data/events.tsv" file-sep="\t" defaultView="day" date="2026-04-15" >}}}
@@ -562,17 +612,19 @@ You can skip YAML metadata entirely and pass **all** options directly in the sho
 
 ## Inline override of metadata
 
-You can **combine** YAML metadata with inline arguments. The metadata key provides the base configuration, and any inline arguments override individual values. Here the `week-view` config is reused but switched to month view with a different date and height.
+You can **combine** YAML metadata with inline arguments. The metadata key provides the base configuration, and any inline arguments override individual values. Here the `custom-height` config is reused but switched to month view with a different date and height.
 
 ```markdown
-{{{< toastui week-view defaultView="month" date="2026-04-01" height="500px" >}}}
+{{{< toastui custom-height defaultView="month" date="2026-04-01" height="500px" >}}}
 ```
 
-{{< toastui week-view defaultView="month" date="2026-04-01" height="500px" >}}
+{{< toastui custom-height defaultView="month" date="2026-04-01" height="500px" >}}
 
 ## Full-featured schedule
 
 This example puts it all together: events loaded from a CSV file, custom calendar colours for different event types, detail popups, timezone configuration, a workweek-only week view with custom hour range, and an enlarged time grid. This pattern is well suited for multi-day workshops and conference programmes. `height` and `timegridHeight` are manually set to remove scroll bar.
+
+Note on `timezone`: the CSV's `start`/`end` columns use plain wall-clock timestamps (`2026-10-05T09:00:00`, no UTC offset) because `timezone.zones[0].timezoneName` is set to `Europe/Stockholm` — every viewer sees these events at the stated Stockholm time, regardless of their own device's timezone, with DST handled automatically. See [Time Zones](https://github.com/royfrancis/quarto-toastui/blob/main/README.md#time-zones) in the repo README for details.
 
 ```yaml
 toastui:

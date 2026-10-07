@@ -560,6 +560,40 @@ calendarConfig = ({
 ```
 
 ```{ojs}
+naiveDateTimePattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/
+
+function tzOffsetMinutes(date, timeZone) {
+  const parts = {}
+  new Intl.DateTimeFormat("en-US", {
+    timeZone, hourCycle: "h23",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", second: "2-digit"
+  }).formatToParts(date).forEach((p) => { parts[p.type] = p.value })
+  const asUTC = Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second)
+  return (asUTC - date.getTime()) / 60000
+}
+
+function wallTimeToUtcIso(value, timeZone) {
+  const match = naiveDateTimePattern.exec(value)
+  if (!match) return null
+  const guess = Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3]), Number(match[4]), Number(match[5]), match[6] ? Number(match[6]) : 0)
+  const offset = tzOffsetMinutes(new Date(guess), timeZone)
+  let utcMs = guess - offset * 60000
+  const refined = tzOffsetMinutes(new Date(utcMs), timeZone)
+  if (refined !== offset) utcMs = guess - refined * 60000
+  return new Date(utcMs).toISOString()
+}
+
+function resolveEventTime(value, sourceTz) {
+  if (sourceTz && typeof value === "string") {
+    const converted = wallTimeToUtcIso(value, sourceTz)
+    if (converted) return converted
+  }
+  return value
+}
+```
+
+```{ojs}
 calendar = {
   const mount = document.querySelector("#calendar-mount")
   const preview = document.querySelector("#config-preview")
@@ -645,6 +679,7 @@ calendar = {
       }, 100)
     })
   }
+  const sourceTz = calendarConfig.timezone?.zones?.[0]?.timezoneName ?? null
   const normalizedEvents = eventList.map((event, index) => {
     const normalized = {...event}
     if (normalized.id == null || normalized.id === "") normalized.id = `playground-event-${index}`
@@ -652,6 +687,10 @@ calendar = {
     if (!normalized.state) normalized.state = ""
     if (normalized.attendees != null && !Array.isArray(normalized.attendees)) normalized.attendees = [String(normalized.attendees)]
     if (!normalized.attendees || (Array.isArray(normalized.attendees) && normalized.attendees.length === 0)) normalized.attendees = null
+    if (!normalized.isAllday && normalized.category !== "allday") {
+      if (normalized.start != null) normalized.start = resolveEventTime(normalized.start, sourceTz)
+      if (normalized.end != null) normalized.end = resolveEventTime(normalized.end, sourceTz)
+    }
     return normalized
   })
   if (normalizedEvents.length) cal.createEvents(normalizedEvents)

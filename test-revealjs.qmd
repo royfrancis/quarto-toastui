@@ -100,6 +100,37 @@ toastui:
       - id: cal2
         name: Work
         backgroundColor: "#00a9ff"
+
+  timezone-naive-dst:
+    defaultView: week
+    date: "2026-01-12"
+    height: 520px
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    events:
+      - title: "Winter session (CET, UTC+1)"
+        start: "2026-01-12T09:00:00"
+        end: "2026-01-12T10:00:00"
+      - title: "Summer session (CEST, UTC+2)"
+        start: "2026-07-13T09:00:00"
+        end: "2026-07-13T10:00:00"
+
+  auto-hour-range-demo:
+    defaultView: week
+    date: "2026-04-15"
+    height: 520px
+    autoHourRange: true
+    events:
+      - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
 ---
 
 ## Full configuration
@@ -112,7 +143,7 @@ toastui:
 toastui:
   options-all:
     defaultView: week
-    height: 660px
+    height: 520px
     navigation: true
     date: "2026-04-15"
     file: data/events.tsv
@@ -267,6 +298,28 @@ toastui:
 - Calendar opens in week view
 - Milestone/task/allday panels are hidden (`taskView: false`, `eventView: [time]`)
 - Month/week/day buttons are hidden (custom navigation disabled)
+:::
+
+## Timezone: naive timestamps (DST-aware)
+
+{{< toastui timezone-naive-dst >}}
+
+::: {.notes}
+- Both events use the same naive `09:00`–`10:00` wall-clock time, with no
+  UTC offset in the source data
+- Confirm both render at 09:00–10:00 in the grid: the January event resolves
+  against Stockholm's CET (+01:00) offset and the July event against CEST
+  (+02:00), automatically, with no difference in the source data
+:::
+
+## Automatic hour range
+
+{{< toastui auto-hour-range-demo >}}
+
+::: {.notes}
+- Events run 09:00–15:30
+- Confirm the week time grid fits to exactly 09:00–15:30 instead of the
+  full day, since `week.hourStart`/`week.hourEnd` are not set explicitly
 :::
 
 ## Basic inline

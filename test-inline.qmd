@@ -9,25 +9,25 @@ Each section tests a single inline shortcode parameter in isolation. No YAML cal
 
 Tests loading events from a TSV file.
 
-{{< toastui file="data/events.tsv" file-sep="\t" >}}
+{{< toastui file="data/events.tsv" file-sep="\t" date="2026-04-14" >}}
 
 ## `file` (CSV)
 
 Tests loading events from a CSV file.
 
-{{< toastui file="data/events.csv" file-sep="," >}}
+{{< toastui file="data/events.csv" file-sep="," date="2026-04-17" >}}
 
 ## `file-sep` (tab)
 
 Tests explicit tab separator.
 
-{{< toastui file="data/events.tsv" file-sep="\t" >}}
+{{< toastui file="data/events.tsv" file-sep="\t" date="2026-04-14" >}}
 
 ## `file-sep` (comma)
 
 Tests explicit comma separator.
 
-{{< toastui file="data/events.csv" file-sep="," >}}
+{{< toastui file="data/events.csv" file-sep="," date="2026-04-17" >}}
 
 ## `defaultView` (month)
 
@@ -123,3 +123,28 @@ Click an event and confirm that its detail popup uses the same format.
 An unsupported value should render a styled error block listing the accepted values.
 
 {{< toastui timeFormat="invalid" >}}
+
+## `autoHourRange` (true)
+
+Events run 09:30-10:15 and 14:00-15:00. The data also includes an all-day
+event, which `autoHourRange` ignores when scanning for the timed extent.
+Confirm the week time grid fits to exactly 09:30-15:00 instead of the full
+day.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" autoHourRange="true" >}}
+
+## `autoHourRange` (false)
+
+Same data with `autoHourRange="false"`. Confirm the time grid shows the full
+default day (00:00-24:00).
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" autoHourRange="false" >}}
+
+## `timezone` (inline JSON object, naive timestamps)
+
+The CSV events use naive timestamps (no UTC offset). Confirm they render at
+their stated wall-clock time (09:30 and 14:00), resolved against
+`Europe/Stockholm` even though this nested object is supplied as an inline
+kwarg rather than YAML metadata.
+
+{{< toastui file="data/events.csv" file-sep="," defaultView="week" date="2026-04-17" timezone='{"zones":[{"timezoneName":"Europe/Stockholm"}]}' >}}

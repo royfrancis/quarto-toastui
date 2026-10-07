@@ -228,6 +228,36 @@ toastui:
         backgroundColor: "#c44d58"
         dragBackgroundColor: "#c44d58"
         borderColor: "#c44d58"
+
+  timezone-naive-dst:
+    defaultView: week
+    date: "2026-01-12"
+    useDetailPopup: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    events:
+      - title: "Winter session (CET, UTC+1)"
+        start: "2026-01-12T09:00:00"
+        end: "2026-01-12T10:00:00"
+      - title: "Summer session (CEST, UTC+2)"
+        start: "2026-07-13T09:00:00"
+        end: "2026-07-13T10:00:00"
+
+  auto-hour-range-demo:
+    defaultView: week
+    date: "2026-04-15"
+    autoHourRange: true
+    events:
+      - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
 ---
 
 ## YAML metadata
@@ -465,7 +495,121 @@ toastui:
 
 ### Long labels
 
+<details>
+<summary>Show code</summary>
+
+```yaml
+---
+toastui:
+
+  long-labels:
+    defaultView: week
+    date: "2026-04-17"
+    file: "data/events-long-labels.csv"
+    file-sep: ","
+    useDetailPopup: true
+    eventDetailItems:
+      - location
+      - attendees
+      - state
+      - arbitrary
+      - body
+    popupDetailItems:
+      - location
+      - attendees
+      - state
+      - arbitrary
+      - body
+    week:
+      eventView: true
+      taskView: false
+    calendars:
+      - id: cal1
+        name: Work
+        color: "#ffffff"
+        backgroundColor: "#087f8c"
+        dragBackgroundColor: "#087f8c"
+        borderColor: "#087f8c"
+      - id: cal2
+        name: Personal
+        color: "#ffffff"
+        backgroundColor: "#c44d58"
+        dragBackgroundColor: "#c44d58"
+        borderColor: "#c44d58"
+---
+
+{{{< toastui long-labels >}}}
+```
+
+</details>
+
 {{< toastui long-labels >}}
+
+### Timezone: naive timestamps (DST-aware)
+
+```yaml
+---
+toastui:
+  timezone-naive-dst:
+    defaultView: week
+    date: "2026-01-12"
+    useDetailPopup: true
+    timezone:
+      zones:
+        - timezoneName: Europe/Stockholm
+    events:
+      - title: "Winter session (CET, UTC+1)"
+        start: "2026-01-12T09:00:00"
+        end: "2026-01-12T10:00:00"
+      - title: "Summer session (CEST, UTC+2)"
+        start: "2026-07-13T09:00:00"
+        end: "2026-07-13T10:00:00"
+---
+
+{{{< toastui timezone-naive-dst >}}}
+```
+
+- Both events use the same naive `09:00`–`10:00` wall-clock time, with no
+  UTC offset in the source data
+- Confirm both render at 09:00–10:00 in the grid: the January event resolves
+  against Stockholm's CET (+01:00) offset and the July event against CEST
+  (+02:00), automatically, with no difference in the source data
+
+{{< toastui timezone-naive-dst >}}
+
+### Automatic hour range
+
+<details>
+<summary>Show code</summary>
+
+```yaml
+---
+toastui:
+  auto-hour-range-demo:
+    defaultView: week
+    date: "2026-04-15"
+    autoHourRange: true
+    events:
+      - title: "Standup"
+        start: "2026-04-15T09:00:00"
+        end: "2026-04-15T09:30:00"
+      - title: "Deep Work"
+        start: "2026-04-15T10:00:00"
+        end: "2026-04-15T12:00:00"
+      - title: "Code Review"
+        start: "2026-04-15T14:00:00"
+        end: "2026-04-15T15:30:00"
+---
+{{{< toastui auto-hour-range-demo >}}}
+```
+
+</details>
+
+- Events run 09:00–15:30
+- Confirm the week time grid fits to exactly 09:00–15:30 instead of the
+  full day, since `week.hourStart`/`week.hourEnd` are not set explicitly
+
+{{< toastui auto-hour-range-demo >}}
 
 ## Inline
 ### Basic

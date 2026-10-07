@@ -26,6 +26,9 @@ website:
           - href: test-yaml.qmd
             text: "Test YAML"
             aria-label: "Test YAML"
+          - href: test-revealjs.qmd
+            text: "Test RevealJS"
+            aria-label: "Test RevealJS fixture"
           - href: revealjs.qmd
             text: RevealJS
             aria-label: "RevealJS presentation"
